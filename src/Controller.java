@@ -4,11 +4,10 @@
 public class Controller {
     public static void main(String[] args) {
         Listy listy = new Listy();
-        new Pojazd();
-        new Pojazd();
-        new Pojazd();
-        new Pojazd();
-        new Fabryka().start();
+        Pojazd mercedes = new Pojazd("Mercedes");
+        mercedes.start();
+        listy.getListaPojazdow().add(listy.getListaPojazdow().size(),mercedes);
+        new Fabryka(listy).start();
 
 
     }
