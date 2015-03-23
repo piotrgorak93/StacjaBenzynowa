@@ -2,7 +2,7 @@
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
 public class Fabryka extends Thread {
-    public Fabryka(Ogloszenia listaZlecen) {
+    public Fabryka() {
 
     }
 

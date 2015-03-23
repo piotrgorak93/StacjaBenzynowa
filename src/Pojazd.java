@@ -3,10 +3,11 @@
  */
 public class Pojazd {
     private int pojemnoscBaku;
+    private float iloscPaliwa = pojemnoscBaku;
 
-    public Pojazd(Ogloszenia listaZlecen) {
-        setPojemnoscBaku(new Randomizer().losuj(100,50));
-        System.out.println("Mam "+getPojemnoscBaku()+ " l paliwa");
+    public Pojazd() {
+        setPojemnoscBaku(new Randomizer().losuj(100, 50));
+        System.out.println("Mam " + getIloscPaliwa() + " l paliwa");
 
     }
 
@@ -16,5 +17,13 @@ public class Pojazd {
 
     public void setPojemnoscBaku(int pojemnoscBaku) {
         this.pojemnoscBaku = pojemnoscBaku;
+    }
+
+    public float getIloscPaliwa() {
+        return iloscPaliwa;
+    }
+
+    public void setIloscPaliwa(float iloscPaliwa) {
+        this.iloscPaliwa = iloscPaliwa;
     }
 }
