@@ -6,7 +6,14 @@ public class Pojazd extends Thread {
     private float iloscPaliwa;
     private String truckName;
 
-    public Pojazd(String truckName) {
+    public Listy getListy() {
+        return listy;
+    }
+
+    private Listy listy;
+
+    public Pojazd(Listy listy,String truckName) {
+        setListy(listy);
         setTruckName(truckName);
         setPojemnoscBaku(new Randomizer().losuj(100, 50));
         setIloscPaliwa(getPojemnoscBaku());
@@ -40,6 +47,20 @@ public class Pojazd extends Thread {
 
     @Override
     public void run() {
+        while (true) {
+            if (getListy().getListaOgloszen().size() != 0) {
+                bioreZlecenie();
+            }
+        }
+    }
+
+    public void setListy(Listy listy) {
+        this.listy = listy;
+    }
+
+    public void bioreZlecenie() {
+        System.out.println(this.getTruckName()+": Przyjalem zlecenie " + getListy().getListaOgloszen().get(0));
+        getListy().getListaOgloszen().remove(getListy().getListaOgloszen().get(0));
 
     }
 }

@@ -9,12 +9,7 @@ public class Listy {
     private ArrayList<Stacja> listaStacji = new ArrayList<Stacja>();
     private ArrayList<Fabryka> listaFabryk = new ArrayList<Fabryka>();
     private ArrayList<Magazyn> listaMagazynow = new ArrayList<Magazyn>();
-
-    public void setListaOgloszen(ArrayList<String> listaOgloszen) {
-        this.listaOgloszen = listaOgloszen;
-    }
-
-    private ArrayList<String> listaOgloszen = new ArrayList<String>();
+    private ArrayList<Ogloszenie> listaOgloszen = new ArrayList<Ogloszenie>();
     private ArrayList<String> listaZleceniobiorcow = new ArrayList<String>();
 
     public ArrayList<Magazyn> getListaMagazynow() {
@@ -37,7 +32,7 @@ public class Listy {
     }
 
 
-    public ArrayList<String> getListaOgloszen() {
+    public synchronized ArrayList<Ogloszenie> getListaOgloszen() {
         return listaOgloszen;
     }
 
@@ -45,6 +40,7 @@ public class Listy {
     public ArrayList<String> getListaZleceniobiorcow() {
         return listaZleceniobiorcow;
     }
+
 
 
 }

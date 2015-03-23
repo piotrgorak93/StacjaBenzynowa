@@ -9,18 +9,21 @@ public class Fabryka extends Thread {
 
     }
 
-    public void wezwijPojazd() {
-        System.out.println("Potrzebuje transportu");
-        listy.getListaOgloszen().add(listy.getListaOgloszen().size(),"");
+    public void wystawOgloszenie() {
+        listy.getListaOgloszen().add(listy.getListaOgloszen().size(), new Ogloszenie("Tesco", "Magazyn Adama"));
+        System.out.println("Potrzebuje transportu " + listy.getListaOgloszen().get(listy.getListaOgloszen().size() - 1));
+
     }
 
     @Override
     public void run() {
-        try {
-            Thread.sleep(new Randomizer().losuj(5000, 1000));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while (true) {
+            try {
+                Thread.sleep(new Randomizer().losuj(5000, 1000));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            wystawOgloszenie();
         }
-        wezwijPojazd();
     }
 }
