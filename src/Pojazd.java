@@ -5,6 +5,7 @@ public class Pojazd extends Thread {
     private int pojemnoscBaku;
     private float iloscPaliwa;
     private String truckName;
+    private boolean jade = false;
 
     public Listy getListy() {
         return listy;
@@ -12,7 +13,7 @@ public class Pojazd extends Thread {
 
     private Listy listy;
 
-    public Pojazd(Listy listy,String truckName) {
+    public Pojazd(Listy listy, String truckName) {
         setListy(listy);
         setTruckName(truckName);
         setPojemnoscBaku(new Randomizer().losuj(100, 50));
@@ -48,8 +49,20 @@ public class Pojazd extends Thread {
     @Override
     public void run() {
         while (true) {
-            if (getListy().getListaOgloszen().size() != 0) {
-                bioreZlecenie();
+            while (czyWolny()) {
+                if (getListy().getListaOgloszen().size() != 0) {
+                    bioreZlecenie();
+                    jestemZajety();
+                }
+            }
+            try {
+                Thread.sleep(1000);
+                System.out.println("Dojechałem");
+                jestemWolny();
+
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -59,8 +72,20 @@ public class Pojazd extends Thread {
     }
 
     public void bioreZlecenie() {
-        System.out.println(this.getTruckName()+": Przyjalem zlecenie " + getListy().getListaOgloszen().get(0));
+        System.out.println(this.getTruckName() + ": Przyjalem zlecenie " + getListy().getListaOgloszen().get(0));
         getListy().getListaOgloszen().remove(getListy().getListaOgloszen().get(0));
 
+    }
+
+    public boolean czyWolny() {
+        return !this.jade;
+
+    }
+
+    public void jestemZajety() {
+        this.jade = true;
+    }
+    public void jestemWolny(){
+        this.jade = false;
     }
 }

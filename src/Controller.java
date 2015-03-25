@@ -11,7 +11,7 @@ public class Controller {
     public static void main(String[] args) {
         Listy listy = new Listy();
         utworzPojazd(listy, "Mercedes");
-        new Fabryka(listy).start();
+        new Fabryka(listy, "Tesco").start();
 
 
     }
