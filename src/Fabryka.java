@@ -6,10 +6,16 @@ import java.util.ArrayList;
 public class Fabryka extends Thread {
     Listy listy;
     private String nazwa;
+    private int x;
+    private int y;
 
     public Fabryka(Listy listy, String nazwa) {
         this.listy = listy;
         setNazwa(nazwa);
+        this.x = new Randomizer().losujZZakresu(27, 0);
+        this.y = new Randomizer().losujZZakresu(30, 0);
+        System.out.println("Jestem "+this.nazwa+" Moja pozycja to ("+this.x+","+this.y+")");
+
     }
 
     public void wystawOgloszenie() {
@@ -23,7 +29,7 @@ public class Fabryka extends Thread {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(new Randomizer().losuj(5000, 1000));
+                Thread.sleep(new Randomizer().losujZZakresu(5000, 1000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

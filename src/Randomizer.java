@@ -5,8 +5,16 @@ import java.util.Random;
  */
 public class Randomizer {
 
-    public int losuj(int max, int min) {
+    public int losujZZakresu(int max, int min) {
         Random r = new Random();
         return r.nextInt(max - min + 1) + min;
+    }
+    public int losujX(){
+        Random r = new Random();
+        return r.nextInt(26);
+    }
+    public int losujY(){
+        Random r = new Random();
+        return r.nextInt(29);
     }
 }

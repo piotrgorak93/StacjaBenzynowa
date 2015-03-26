@@ -2,10 +2,7 @@
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-26.
  */
 
-import java.util.PriorityQueue;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 class Vertex implements Comparable<Vertex> {
     public final String name;
@@ -15,14 +12,19 @@ class Vertex implements Comparable<Vertex> {
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
 
+    public Edge[] getAdjacencies() {
+        return this.adjacencies;
+    }
+
     public Vertex(String argName, int x, int y) {
         name = argName;
         this.x = x;
         this.y = y;
+        getAdjacencies();
     }
 
     public String toString() {
-        return name+" ("+x+","+y+")";
+        return name + " (" + x + "," + y + ")";
     }
 
     public int compareTo(Vertex other) {
@@ -76,43 +78,37 @@ public class Nawigacja {
         return path;
     }
 
-    public static void main(String[] args) {
-        Vertex v0 = new Vertex("A",0,0);
-        Vertex v1 = new Vertex("B",0,21);
-        Vertex v2 = new Vertex("C",11,21);
-        Vertex v3 = new Vertex("D",0,30);
-        Vertex v4 = new Vertex("E",21,16);
-        Vertex v5 = new Vertex("F",21, 30);
-        Vertex v6 = new Vertex("G",16,7);
-        Vertex v7 = new Vertex("H",11,7);
-        Vertex v8 = new Vertex("I",16,0);
-        Vertex v9 = new Vertex("J",21,7);
-        Vertex v10 = new Vertex("K",27,16);
-        Vertex v11 = new Vertex("L",27,0);
-        v0.adjacencies = new Edge[]{new Edge(v1, 21),
-                new Edge(v8, 16)};
-        v1.adjacencies = new Edge[]{new Edge(v0, 21),
-                new Edge(v2, 11),
-                new Edge(v3, 9)};
-        v2.adjacencies = new Edge[]{new Edge(v1, 11), new Edge(v7, 14)};
-        v3.adjacencies = new Edge[]{new Edge(v2, 9),
-                new Edge(v5, 21)};
-        v4.adjacencies = new Edge[]{new Edge(v10, 6), new Edge(v9, 9)};
-        v5.adjacencies = new Edge[]{
-                new Edge(v3, 21),
-                new Edge(v4, 14)};
-        v6.adjacencies = new Edge[]{new Edge(v7, 5),
-                new Edge(v9, 5), new Edge(v8, 7)};
-        v7.adjacencies = new Edge[]{new Edge(v2, 14), new Edge(v6, 5)};
-        v8.adjacencies = new Edge[]{new Edge(v6, 7), new Edge(v0, 16), new Edge(v11, 11)};
-        v9.adjacencies = new Edge[]{new Edge(v6, 5), new Edge(v4, 9)};
-        v10.adjacencies = new Edge[]{new Edge(v4, 6), new Edge(v11, 16)};
-        v11.adjacencies = new Edge[]{new Edge(v10, 16), new Edge(v8, 11)};
+    public Nawigacja(Vertex from, Vertex to) {
+        List<Vertex> listaVertex = Arrays.asList(new Vertex("A", 0, 0),
+                new Vertex("B", 0, 21), new Vertex("B", 0, 21), new Vertex("C", 11, 21),
+                new Vertex("D", 0, 30), new Vertex("E", 21, 16), new Vertex("F", 21, 30),
+                new Vertex("G", 16, 7), new Vertex("H", 11, 7), new Vertex("I", 16, 0),
+                new Vertex("J", 21, 7), new Vertex("K", 27, 16), new Vertex("L", 27, 0)
+        );
 
-        computePaths(v0);
+        listaVertex.get(0).adjacencies = new Edge[]{new Edge(listaVertex.get(1), 21),
+                new Edge(listaVertex.get(8), 16)};
+        listaVertex.get(1).adjacencies = new Edge[]{new Edge(listaVertex.get(0), 21),
+                new Edge(listaVertex.get(2), 11),
+                new Edge(listaVertex.get(2), 9)};
+        listaVertex.get(2).adjacencies = new Edge[]{new Edge(listaVertex.get(1), 11), new Edge(listaVertex.get(7), 14)};
+        listaVertex.get(2).adjacencies = new Edge[]{new Edge(listaVertex.get(2), 9),
+                new Edge(listaVertex.get(5), 21)};
+        listaVertex.get(4).adjacencies = new Edge[]{new Edge(listaVertex.get(10), 6), new Edge(listaVertex.get(9), 9)};
+        listaVertex.get(5).adjacencies = new Edge[]{
+                new Edge(listaVertex.get(3), 21),
+                new Edge(listaVertex.get(4), 14)};
+        listaVertex.get(6).adjacencies = new Edge[]{new Edge(listaVertex.get(7), 5),
+                new Edge(listaVertex.get(9), 5), new Edge(listaVertex.get(8), 7)};
+        listaVertex.get(7).adjacencies = new Edge[]{new Edge(listaVertex.get(2), 14), new Edge(listaVertex.get(6), 5)};
+        listaVertex.get(8).adjacencies = new Edge[]{new Edge(listaVertex.get(6), 7), new Edge(listaVertex.get(0), 16), new Edge(listaVertex.get(11), 11)};
+        listaVertex.get(9).adjacencies = new Edge[]{new Edge(listaVertex.get(6), 5), new Edge(listaVertex.get(4), 9)};
+        listaVertex.get(10).adjacencies = new Edge[]{new Edge(listaVertex.get(4), 6), new Edge(listaVertex.get(11), 16)};
+        listaVertex.get(11).adjacencies = new Edge[]{new Edge(listaVertex.get(10), 16), new Edge(listaVertex.get(8), 11)};
 
-        System.out.println("Distance from "+v0+" to " + v5 + ": " + v5.minDistance);
-        List<Vertex> path = getShortestPathTo(v5);
+        computePaths(from);
+        System.out.println("Distance from " + from + " to " + to + ": " + to.minDistance);
+        List<Vertex> path = getShortestPathTo(to);
         System.out.println("Path: " + path);
     }
 

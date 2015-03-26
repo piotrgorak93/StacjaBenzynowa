@@ -8,6 +8,7 @@ public class Pojazd extends Thread {
     private boolean jade = false;
     private int spalanie;
     private Ogloszenie mojeZlecenie;
+    private Baza baza;
 
     public Listy getListy() {
         return listy;
@@ -15,11 +16,12 @@ public class Pojazd extends Thread {
 
     private Listy listy;
 
-    public Pojazd(Listy listy, String truckName) {
+    public Pojazd(Listy listy, String truckName, Baza baza) {
+        this.baza=baza;
         setListy(listy);
         setTruckName(truckName);
-        setPojemnoscBaku(new Randomizer().losuj(100, 50));
-        setSpalanie(new Randomizer().losuj(45, 25));
+        setPojemnoscBaku(new Randomizer().losujZZakresu(100, 50));
+        setSpalanie(new Randomizer().losujZZakresu(45, 25));
         setIloscPaliwa(getPojemnoscBaku());
         System.out.println("Jestem " + getTruckName() + " i mam " + getIloscPaliwa() + " l paliwa, moje spalanie to " + getSpalanie());
     }
@@ -60,6 +62,7 @@ public class Pojazd extends Thread {
             try {
                 Thread.sleep(3000);
                 System.out.println("Dojechałem "+this.mojeZlecenie );
+                wrocDoBazy();
                 jestemWolny();
 
 
@@ -76,9 +79,8 @@ public class Pojazd extends Thread {
     public void bioreZlecenie() {
         this.mojeZlecenie=getListy().getListaOgloszen().get(0);
         System.out.println(this.getTruckName() + ": Przyjalem zlecenie " + this.mojeZlecenie );
-
-
         getListy().getListaOgloszen().remove(getListy().getListaOgloszen().get(0));
+        new Nawigacja()
 
     }
 
@@ -101,5 +103,8 @@ public class Pojazd extends Thread {
 
     public void setSpalanie(int spalanie) {
         this.spalanie = spalanie;
+    }
+    public void wrocDoBazy(){
+
     }
 }
