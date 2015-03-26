@@ -77,10 +77,11 @@ public class Pojazd extends Thread {
     }
 
     public void bioreZlecenie() {
+        Vertex zrodlo;
+        Vertex cel;
         this.mojeZlecenie=getListy().getListaOgloszen().get(0);
         System.out.println(this.getTruckName() + ": Przyjalem zlecenie " + this.mojeZlecenie );
         getListy().getListaOgloszen().remove(getListy().getListaOgloszen().get(0));
-        new Nawigacja()
 
     }
 

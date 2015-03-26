@@ -78,9 +78,9 @@ public class Nawigacja {
         return path;
     }
 
-    public Nawigacja(Vertex from, Vertex to) {
+    public Nawigacja() {
         List<Vertex> listaVertex = Arrays.asList(new Vertex("A", 0, 0),
-                new Vertex("B", 0, 21), new Vertex("B", 0, 21), new Vertex("C", 11, 21),
+                new Vertex("B", 0, 21), new Vertex("C", 11, 21),
                 new Vertex("D", 0, 30), new Vertex("E", 21, 16), new Vertex("F", 21, 30),
                 new Vertex("G", 16, 7), new Vertex("H", 11, 7), new Vertex("I", 16, 0),
                 new Vertex("J", 21, 7), new Vertex("K", 27, 16), new Vertex("L", 27, 0)
@@ -90,9 +90,9 @@ public class Nawigacja {
                 new Edge(listaVertex.get(8), 16)};
         listaVertex.get(1).adjacencies = new Edge[]{new Edge(listaVertex.get(0), 21),
                 new Edge(listaVertex.get(2), 11),
-                new Edge(listaVertex.get(2), 9)};
+                new Edge(listaVertex.get(3), 9)};
         listaVertex.get(2).adjacencies = new Edge[]{new Edge(listaVertex.get(1), 11), new Edge(listaVertex.get(7), 14)};
-        listaVertex.get(2).adjacencies = new Edge[]{new Edge(listaVertex.get(2), 9),
+        listaVertex.get(3).adjacencies = new Edge[]{new Edge(listaVertex.get(2), 9),
                 new Edge(listaVertex.get(5), 21)};
         listaVertex.get(4).adjacencies = new Edge[]{new Edge(listaVertex.get(10), 6), new Edge(listaVertex.get(9), 9)};
         listaVertex.get(5).adjacencies = new Edge[]{
@@ -106,9 +106,10 @@ public class Nawigacja {
         listaVertex.get(10).adjacencies = new Edge[]{new Edge(listaVertex.get(4), 6), new Edge(listaVertex.get(11), 16)};
         listaVertex.get(11).adjacencies = new Edge[]{new Edge(listaVertex.get(10), 16), new Edge(listaVertex.get(8), 11)};
 
-        computePaths(from);
-        System.out.println("Distance from " + from + " to " + to + ": " + to.minDistance);
-        List<Vertex> path = getShortestPathTo(to);
+        computePaths(listaVertex.get(0));
+
+        System.out.println("Distance to " + listaVertex.get(5) + ": " + listaVertex.get(5).minDistance);
+        List<Vertex> path = getShortestPathTo(listaVertex.get(5));
         System.out.println("Path: " + path);
     }
 

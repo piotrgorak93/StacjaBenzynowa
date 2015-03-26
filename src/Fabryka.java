@@ -6,6 +6,15 @@ import java.util.ArrayList;
 public class Fabryka extends Thread {
     Listy listy;
     private String nazwa;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     private int x;
     private int y;
 
@@ -14,13 +23,13 @@ public class Fabryka extends Thread {
         setNazwa(nazwa);
         this.x = new Randomizer().losujZZakresu(27, 0);
         this.y = new Randomizer().losujZZakresu(30, 0);
-        System.out.println("Jestem "+this.nazwa+" Moja pozycja to ("+this.x+","+this.y+")");
+        System.out.println("Jestem "+this.nazwa+" Moja pozycja to ("+getX()+","+getY()+")");
 
     }
 
     public void wystawOgloszenie() {
         ArrayList<Ogloszenie> lista = listy.getListaOgloszen();
-        lista.add(lista.size(), new Ogloszenie(this.getNazwa(), "Magazyn Adama"));
+        lista.add(lista.size(), new Ogloszenie(this.getNazwa(), "Magazyn Adama", getX(), getY(), 20, 50));
         System.out.println("Potrzebuje transportu " + lista.get(lista.size() - 1));
 
     }

@@ -9,13 +9,13 @@ public class Kontroler {
     }
 
     public static void main(String[] args) {
-        Listy listy = new Listy();
-        Baza baza = new Baza(new Randomizer().losujX(), new Randomizer().losujY());
-        utworzPojazd(listy, "Mercedes", baza);
-        new Fabryka(listy, "Tesco").start();
-        new Fabryka(listy, "Castorama").start();
-        new Mapa(100,100);
-
+//        Listy listy = new Listy();
+//        Baza baza = new Baza(new Randomizer().losujX(), new Randomizer().losujY());
+//        utworzPojazd(listy, "Mercedes", baza);
+//        new Fabryka(listy, "Tesco").start();
+//        new Fabryka(listy, "Castorama").start();
+//        new Mapa(100,100);
+            new Nawigacja();
     }
 
 }
