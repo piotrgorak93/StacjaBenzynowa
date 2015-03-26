@@ -12,6 +12,7 @@ public class Kontroler {
         Listy listy = new Listy();
         utworzPojazd(listy, "Mercedes");
         new Fabryka(listy, "Tesco").start();
+        new Fabryka(listy, "Castorama").start();
         new Mapa(100,100);
 
     }

@@ -1,6 +1,7 @@
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-26.
  */
+
 import java.util.PriorityQueue;
 import java.util.List;
 import java.util.ArrayList;
@@ -8,16 +9,20 @@ import java.util.Collections;
 
 class Vertex implements Comparable<Vertex> {
     public final String name;
+    public final int x;
+    public final int y;
     public Edge[] adjacencies;
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
 
-    public Vertex(String argName) {
+    public Vertex(String argName, int x, int y) {
         name = argName;
+        this.x = x;
+        this.y = y;
     }
 
     public String toString() {
-        return name;
+        return name+" ("+x+","+y+")";
     }
 
     public int compareTo(Vertex other) {
@@ -72,18 +77,18 @@ public class Nawigacja {
     }
 
     public static void main(String[] args) {
-        Vertex v0 = new Vertex("A");
-        Vertex v1 = new Vertex("B");
-        Vertex v2 = new Vertex("C");
-        Vertex v3 = new Vertex("D");
-        Vertex v4 = new Vertex("E");
-        Vertex v5 = new Vertex("F");
-        Vertex v6 = new Vertex("G");
-        Vertex v7 = new Vertex("H");
-        Vertex v8 = new Vertex("I");
-        Vertex v9 = new Vertex("J");
-        Vertex v10 = new Vertex("K");
-        Vertex v11 = new Vertex("L");
+        Vertex v0 = new Vertex("A",0,0);
+        Vertex v1 = new Vertex("B",0,21);
+        Vertex v2 = new Vertex("C",11,21);
+        Vertex v3 = new Vertex("D",0,30);
+        Vertex v4 = new Vertex("E",21,16);
+        Vertex v5 = new Vertex("F",21, 30);
+        Vertex v6 = new Vertex("G",16,7);
+        Vertex v7 = new Vertex("H",11,7);
+        Vertex v8 = new Vertex("I",16,0);
+        Vertex v9 = new Vertex("J",21,7);
+        Vertex v10 = new Vertex("K",27,16);
+        Vertex v11 = new Vertex("L",27,0);
         v0.adjacencies = new Edge[]{new Edge(v1, 21),
                 new Edge(v8, 16)};
         v1.adjacencies = new Edge[]{new Edge(v0, 21),
@@ -106,7 +111,7 @@ public class Nawigacja {
 
         computePaths(v0);
 
-        System.out.println("Distance to " + v5 + ": " + v5.minDistance);
+        System.out.println("Distance from "+v0+" to " + v5 + ": " + v5.minDistance);
         List<Vertex> path = getShortestPathTo(v5);
         System.out.println("Path: " + path);
     }

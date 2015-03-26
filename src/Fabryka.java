@@ -14,7 +14,7 @@ public class Fabryka extends Thread {
 
     public void wystawOgloszenie() {
         ArrayList<Ogloszenie> lista = listy.getListaOgloszen();
-       lista.add(lista.size(), new Ogloszenie(this.getNazwa(), "Magazyn Adama"));
+        lista.add(lista.size(), new Ogloszenie(this.getNazwa(), "Magazyn Adama"));
         System.out.println("Potrzebuje transportu " + lista.get(lista.size() - 1));
 
     }

@@ -12,11 +12,10 @@ public class Ogloszenie {
         this.zrodlo = zrodlo;
         this.cel = cel;
         this.numerOgloszenia = numer++;
-        System.out.println("Dodano ogloszenie z "+zrodlo+" do "+cel+" nr "+this.numerOgloszenia);
     }
 
     @Override
     public String toString() {
-        return "z " + this.zrodlo + " do " + this.cel + " numer " + numerOgloszenia;
+        return "z " + this.zrodlo + " do " + this.cel + ", numer zlecenia: " + numerOgloszenia;
     }
 }
