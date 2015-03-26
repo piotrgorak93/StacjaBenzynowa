@@ -6,7 +6,7 @@ public class Pojazd extends Thread {
     private float iloscPaliwa;
     private String truckName;
     private boolean jade = false;
-    private float spalanie;
+    private int spalanie;
 
     public Listy getListy() {
         return listy;
@@ -18,7 +18,7 @@ public class Pojazd extends Thread {
         setListy(listy);
         setTruckName(truckName);
         setPojemnoscBaku(new Randomizer().losuj(100, 50));
-        setSpalanie(new Randomizer().losuj(28,40));
+        setSpalanie(new Randomizer().losuj(40,28));
         setIloscPaliwa(getPojemnoscBaku());
         System.out.println("Jestem " + getTruckName() + " i mam " + getIloscPaliwa() + " l paliwa, moje spalanie to "+getSpalanie());
     }
@@ -94,7 +94,7 @@ public class Pojazd extends Thread {
         return spalanie;
     }
 
-    public void setSpalanie(float spalanie) {
+    public void setSpalanie(int spalanie) {
         this.spalanie = spalanie;
     }
 }
