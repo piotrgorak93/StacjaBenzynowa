@@ -23,15 +23,15 @@ public class Ogloszenie {
     }
 
     public String getZrodlo() {
-        return zrodlo;
+        return this.zrodlo;
     }
 
     public String getCel() {
-        return cel;
+        return this.cel;
     }
 
     @Override
     public String toString() {
-        return "z " + this.zrodlo + " do " + this.cel + ", numer zlecenia: " + numerOgloszenia;
+        return "z " + this.zrodlo + " do " + this.cel + ", numer zlecenia: " + this.numerOgloszenia;
     }
 }

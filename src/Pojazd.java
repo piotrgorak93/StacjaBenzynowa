@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
@@ -9,16 +11,16 @@ public class Pojazd extends Thread {
     private int spalanie;
     private Ogloszenie mojeZlecenie;
     private Baza baza;
-
-    public Listy getListy() {
-        return listy;
-    }
-
     private Listy listy;
 
+    public Listy getListy() {
+        return this.listy;
+    }
+
+
     public Pojazd(Listy listy, String truckName, Baza baza) {
-        this.baza=baza;
-        setListy(listy);
+        this.baza = baza;
+        this.listy = listy;
         setTruckName(truckName);
         setPojemnoscBaku(new Randomizer().losujZZakresu(100, 50));
         setSpalanie(new Randomizer().losujZZakresu(45, 25));
@@ -54,20 +56,8 @@ public class Pojazd extends Thread {
     public void run() {
         while (true) {
             while (czyWolny()) {
-                if (getListy().getListaOgloszen().size() != 0) {
-                    bioreZlecenie();
-                    jestemZajety();
-                }
-            }
-            try {
-                Thread.sleep(3000);
-                System.out.println("Dojechałem "+this.mojeZlecenie );
-                wrocDoBazy();
-                jestemWolny();
+                getListy().akcja(this);
 
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -79,9 +69,6 @@ public class Pojazd extends Thread {
     public void bioreZlecenie() {
         Vertex zrodlo;
         Vertex cel;
-        this.mojeZlecenie=getListy().getListaOgloszen().get(0);
-        System.out.println(this.getTruckName() + ": Przyjalem zlecenie " + this.mojeZlecenie );
-        getListy().getListaOgloszen().remove(getListy().getListaOgloszen().get(0));
 
     }
 
@@ -91,10 +78,17 @@ public class Pojazd extends Thread {
     }
 
     public void jestemZajety() {
-        this.jade = true;
+        if (getListy().czyNiePusta()) {
+            System.out.println(truckName + " znalazł ogłoszenie: " + getListy().getPierwszyZListy());
+            getListy().usunPierwszyZListy();
+            jedz();
+            jestemWolny();
+        }
     }
 
     public void jestemWolny() {
+
+        System.out.println(this.getTruckName() + " dojechal");
         this.jade = false;
     }
 
@@ -105,7 +99,18 @@ public class Pojazd extends Thread {
     public void setSpalanie(int spalanie) {
         this.spalanie = spalanie;
     }
-    public void wrocDoBazy(){
 
+    public void wrocDoBazy() {
+
+    }
+
+    public void jedz() {
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(this.getTruckName() + " jedzie");
+        this.jade = true;
     }
 }

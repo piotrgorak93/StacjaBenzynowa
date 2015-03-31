@@ -1,10 +1,10 @@
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
 public class Listy {
-
     private ArrayList<Pojazd> listaPojazdow = new ArrayList<Pojazd>();
     private ArrayList<Stacja> listaStacji = new ArrayList<Stacja>();
     private ArrayList<Fabryka> listaFabryk = new ArrayList<Fabryka>();
@@ -13,12 +13,12 @@ public class Listy {
     private ArrayList<String> listaZleceniobiorcow = new ArrayList<String>();
 
     public ArrayList<Magazyn> getListaMagazynow() {
-        return listaMagazynow;
+        return this.listaMagazynow;
     }
 
 
     public ArrayList<Pojazd> getListaPojazdow() {
-        return listaPojazdow;
+        return this.listaPojazdow;
     }
 
 
@@ -28,12 +28,12 @@ public class Listy {
 
 
     public ArrayList<Fabryka> getListaFabryk() {
-        return listaFabryk;
+        return this.listaFabryk;
     }
 
 
-    public synchronized ArrayList<Ogloszenie> getListaOgloszen() {
-        return listaOgloszen;
+    public ArrayList<Ogloszenie> getListaOgloszen() {
+        return this.listaOgloszen;
     }
 
 
@@ -41,6 +41,34 @@ public class Listy {
         return listaZleceniobiorcow;
     }
 
+    public void usunPierwszyZListy() {
+        listaOgloszen.remove(0);
+    }
 
+    public Ogloszenie getPierwszyZListy() {
+        return getListaOgloszen().get(0);
+    }
 
+    public void dodajDoListy(Ogloszenie ogloszenie) {
+
+        getListaOgloszen().add(getListaOgloszen().size(), ogloszenie);
+    }
+
+    public synchronized void wezZlecenie(String truckName) {
+        usunPierwszyZListy();
+        System.out.println(truckName + ": Przyjalem zlecenie " + getPierwszyZListy());
+    }
+
+    public boolean czyNiePusta() {
+        return !getListaOgloszen().isEmpty();
+    }
+
+    public synchronized void akcja(Pojazd pojazd) {
+        try {
+            pojazd.jestemZajety();
+            TimeUnit.SECONDS.sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
