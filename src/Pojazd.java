@@ -9,9 +9,20 @@ public class Pojazd extends Thread {
     private String truckName;
     private boolean jade = false;
     private int spalanie;
+
+    public Ogloszenie getMojeZlecenie() {
+        return mojeZlecenie;
+    }
+
+    public void setMojeZlecenie(Ogloszenie mojeZlecenie) {
+        this.mojeZlecenie = mojeZlecenie;
+    }
+
     private Ogloszenie mojeZlecenie;
     private Baza baza;
     private Listy listy;
+    private int pozycjaX;
+    private int pozycjaY;
 
     public Listy getListy() {
         return this.listy;
@@ -25,7 +36,10 @@ public class Pojazd extends Thread {
         setPojemnoscBaku(new Randomizer().losujZZakresu(100, 50));
         setSpalanie(new Randomizer().losujZZakresu(45, 25));
         setIloscPaliwa(getPojemnoscBaku());
-        System.out.println("Jestem " + getTruckName() + " i mam " + getIloscPaliwa() + " l paliwa, moje spalanie to " + getSpalanie());
+        this.pozycjaX = this.baza.pozycjaX();
+        this.pozycjaY = this.baza.pozycjaY();
+        System.out.println(this);
+
     }
 
     public int getPojemnoscBaku() {
@@ -53,10 +67,16 @@ public class Pojazd extends Thread {
     }
 
     @Override
+    public String toString() {
+        return "Jestem " + getTruckName() + " mam w baku " + getIloscPaliwa() + " l paliwa, moje spalanie to " + getSpalanie() +
+                " l/100km, jestem w miejscu (" + getPozycjaX() + "," + getPozycjaY() + ")";
+    }
+
+    @Override
     public void run() {
         while (true) {
             while (czyWolny()) {
-                getListy().akcja(this);
+                jestemZajety();
 
             }
         }
@@ -78,17 +98,21 @@ public class Pojazd extends Thread {
     }
 
     public void jestemZajety() {
-        if (getListy().czyNiePusta()) {
-            System.out.println(truckName + " znalazł ogłoszenie: " + getListy().getPierwszyZListy());
-            getListy().usunPierwszyZListy();
+
+        listy.wezZlecenie(this);
+        while (this.getMojeZlecenie() != null) {
             jedz();
             jestemWolny();
         }
+
+
     }
 
     public void jestemWolny() {
 
-        System.out.println(this.getTruckName() + " dojechal");
+        System.out.println(this.getTruckName() + " dojechal do "+getMojeZlecenie().getCel().getNazwa() +
+                "("+getMojeZlecenie().getxCel()+","+getMojeZlecenie().getyCel()+")");
+        setMojeZlecenie(null);
         this.jade = false;
     }
 
@@ -105,12 +129,37 @@ public class Pojazd extends Thread {
     }
 
     public void jedz() {
+        this.jade = true;
+        int xZrodlo = getMojeZlecenie().getxZrodlo();
+        int yZrodlo = getMojeZlecenie().getyZrodlo();
+
+        int xCel = getMojeZlecenie().getxCel();
+        int yCel = getMojeZlecenie().getyCel();
+
+        System.out.println(this.getTruckName() + " jedzie z "+getMojeZlecenie().getZrodlo().getNazwa() +" ("+xZrodlo+","+yZrodlo+") " +
+                "do "+getMojeZlecenie().getCel().getNazwa()+" ("+xCel+","+yCel+"), nr zlecenia "+getMojeZlecenie().getNumerOgloszenia());
         try {
             TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(this.getTruckName() + " jedzie");
+
         this.jade = true;
+    }
+
+    public int getPozycjaX() {
+        return pozycjaX;
+    }
+
+    public void setPozycjaX(int pozycjaX) {
+        this.pozycjaX = pozycjaX;
+    }
+
+    public int getPozycjaY() {
+        return pozycjaY;
+    }
+
+    public void setPozycjaY(int pozycjaY) {
+        this.pozycjaY = pozycjaY;
     }
 }

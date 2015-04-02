@@ -6,11 +6,10 @@ public class Budynek {
     protected int y;
 
     public Budynek() {
-        int tablicaXY[] = new Randomizer().losujPrzyDrodze();
-//        setX(tablicaXY[0]);
-      //  setY(tablicaXY[1]);
-
-
+        Object[] tablicaXY = new Randomizer().losujPrzyDrodze();
+        setX((Integer) tablicaXY[0]);
+        setY((Integer) tablicaXY[1]);
+        System.out.print("Przy drodze "+tablicaXY[2]+" utworzono budynek ");
     }
 
     public int getX() {
@@ -20,6 +19,7 @@ public class Budynek {
     public int getY() {
         return y;
     }
+
     public void setX(int x) {
         this.x = x;
     }

@@ -41,7 +41,7 @@ public class Listy {
         return listaZleceniobiorcow;
     }
 
-    public void usunPierwszyZListy() {
+    public synchronized void usunPierwszyZListy() {
         listaOgloszen.remove(0);
     }
 
@@ -54,9 +54,15 @@ public class Listy {
         getListaOgloszen().add(getListaOgloszen().size(), ogloszenie);
     }
 
-    public synchronized void wezZlecenie(String truckName) {
-        usunPierwszyZListy();
-        System.out.println(truckName + ": Przyjalem zlecenie " + getPierwszyZListy());
+    public synchronized void wezZlecenie(Pojazd pojazd) {
+        while (czyNiePusta()) {
+            Ogloszenie zlecenie = getPierwszyZListy();
+            System.out.println(pojazd.getTruckName() + " znalazł ogłoszenie: " + zlecenie);
+            pojazd.setMojeZlecenie(zlecenie);
+            usunPierwszyZListy();
+            System.out.println(pojazd.getTruckName() + ": Przyjalem zlecenie " + zlecenie);
+
+        }
     }
 
     public boolean czyNiePusta() {
@@ -64,11 +70,22 @@ public class Listy {
     }
 
     public synchronized void akcja(Pojazd pojazd) {
+        pojazd.jestemZajety();
+        Ogloszenie zlecenie = pojazd.getMojeZlecenie();
+        // System.out.println(pojazd.getMojeZlecenie());
         try {
-            pojazd.jestemZajety();
+
             TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public Magazyn losujMagazyn() {
+        if (getListaMagazynow().size() == 1)
+            return getListaMagazynow().get(0);
+        else
+            return getListaMagazynow().get(new Randomizer().losujZZakresu(getListaMagazynow().size(), 0));
+
     }
 }

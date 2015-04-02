@@ -1,8 +1,6 @@
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
@@ -10,12 +8,22 @@ import java.util.concurrent.TimeUnit;
 public class Randomizer {
     private ArrayList<Droga> pasujaceX = new ArrayList<Droga>();
     private ArrayList<Droga> pasujaceY = new ArrayList<Droga>();
-    private boolean bool = true;
-    Droga tablicaDrog[] = {new Droga("A-B", 0, 0, 0, 21), new Droga("B-D", 0, 21, 0, 30), new Droga("D-F", 0, 30, 21, 30), new Droga("B-C", 0, 21, 11, 21),
+    private ArrayList<Object> wylosowane = new ArrayList<Object>();
+    private Object tab = new Object();
+
+    Object tableToReturn[] = new Object[3];
+    private boolean przyDrodze = false;
+    final Droga tablicaDrog[] = {new Droga("A-B", 0, 0, 0, 21), new Droga("B-D", 0, 21, 0, 30), new Droga("D-F", 0, 30, 21, 30), new Droga("B-C", 0, 21, 11, 21),
             new Droga("H-C", 11, 7, 11, 21), new Droga("H-G", 11, 7, 16, 7), new Droga("G-J", 16, 7, 21, 7), new Droga("I-G", 16, 0, 16, 7),
             new Droga("I-L", 16, 0, 27, 0), new Droga("L-K", 27, 0, 27, 16), new Droga("E-F", 21, 16, 21, 30), new Droga("A-I", 0, 0, 16, 0),
             new Droga("E-K", 21, 16, 27, 16), new Droga("J-E", 21, 7, 21, 16)
     };
+
+    public void setZajete(boolean zajete) {
+        this.zajete = zajete;
+    }
+
+    private boolean zajete = false;
 
     public int losujZZakresu(int max, int min) {
         Random r = new Random();
@@ -32,22 +40,16 @@ public class Randomizer {
         return r.nextInt(30);
     }
 
-    public int[] losujPrzyDrodze() {
-
+    public Object[] losujPrzyDrodze() {
         int x;
         int y;
-        int tableToReturn[] = null;
 
-        while (this.bool) {
+        while (!czyPrzyDrodze()) {
+
+
             x = new Randomizer().losujX();
             y = new Randomizer().losujY();
-            System.out.println("Wygenerowano x " + x);
-            System.out.println("Wygenerowano y " + y);
-            try {
-                TimeUnit.SECONDS.sleep(0);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             for (Droga aTablicaDrog1 : this.tablicaDrog) {
                 if (x >= aTablicaDrog1.getxStart())
                     if (x <= aTablicaDrog1.getxEnd()) {
@@ -58,52 +60,42 @@ public class Randomizer {
                 if (y >= aTablicaDrog.getyStart()) {
                     if (y <= aTablicaDrog.getyEnd()) {
                         this.pasujaceY.add(this.pasujaceY.size(), aTablicaDrog);
-                        System.out.println(y + " jest wieksze rowne " + aTablicaDrog.getyStart() + " i mniejsze rowne " + aTablicaDrog.getyEnd() + " OK");
-                    } else
-                        System.out.println(y + " wieksze rowne od " + aTablicaDrog.getyStart() + " i wieksze od " + aTablicaDrog.getyEnd());
-                } else
-                    System.out.println(y + " mniejsze od " + aTablicaDrog.getyStart() + " i nie wiadomo jakie od " + aTablicaDrog.getyEnd());
-
+                    }
+                }
 
             }
-            if (porownajArrayListy(this.pasujaceX, this.pasujaceY, x, y))
-                System.out.println(x + " " + y);
-            this.pasujaceX.clear();
-            this.pasujaceY.clear();
+            if (porownajArrayListy(this.pasujaceX, this.pasujaceY, x, y)) {
+                if (!czyZajete()) {
+                    this.wylosowane.add(wylosowane.size(), this.tab);
+                    tableToReturn[0] = x;
+                    tableToReturn[1] = y;
+                }
+            } else {
+                this.pasujaceX.clear();
+                this.pasujaceY.clear();
+            }
         }
-
-
         return tableToReturn;
     }
 
-    public boolean czyPrzyDrodze() {
-        return this.bool;
+    private boolean czyZajete() {
+        return !wylosowane.contains(this.tab);
     }
 
-    public synchronized boolean porownajArrayListy(ArrayList<Droga> x, ArrayList<Droga> y, int a, int b) {
+    private boolean czyPrzyDrodze() {
+        return this.przyDrodze;
+    }
 
-        System.out.println("Pasujace x");
-        for (Droga aX : x) {
-            System.out.println(aX.getNazwa());
-        }
-        System.out.println("Pasujace y");
-        for (Droga aY : y) {
-            System.out.println(aY.getNazwa());
-        }
+    private boolean porownajArrayListy(ArrayList<Droga> x, ArrayList<Droga> y, int a, int b) {
         List<Droga> c = new ArrayList<Droga>(x.size() > y.size() ? x.size() : y.size());
         c.addAll(x);
         c.retainAll(y);
         if (!c.isEmpty()) {
-            //    out.println("Wygenerowano : " + x.get(0).getNazwa()+" Koordynaty: "+a+" "+b);
-            //    out.close();
-            System.out.println("Koordynaty: " + a + " " + b);
-            System.out.println("Wygenerowano : " + c.get(0).getNazwa());
-            System.out.println("(" + c.get(0).getxStart() + "," + c.get(0).getyStart() + ");(" + c.get(0).getxEnd() + "," + c.get(0).getyEnd() + ")");
-
-            this.bool = false;
-
-        } else System.out.println("Dalej");
-
-        return false;
+            this.tableToReturn[0] = a;
+            this.tableToReturn[1] = b;
+            this.tableToReturn[2] = c.get(0).getNazwa();
+            this.przyDrodze = true;
+            return true;
+        } else return false;
     }
 }

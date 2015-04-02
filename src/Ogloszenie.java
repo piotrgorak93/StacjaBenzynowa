@@ -2,36 +2,49 @@
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
 public class Ogloszenie {
-    private String zrodlo;
-    private String cel;
-    private int xZrodlo;
-    private int yZrodlo;
-    private int xCel;
-    private int yCel;
+    private Fabryka zrodlo;
+    private Magazyn cel;
     private int numerOgloszenia;
     private static volatile int numer = 1;
 
 
-    public Ogloszenie(String zrodlo, String cel, int xZrodlo, int yZrodlo, int xCel, int yCel) {
+    public Ogloszenie(Fabryka zrodlo, Magazyn cel) {
         this.zrodlo = zrodlo;
         this.cel = cel;
-        this.xZrodlo = xZrodlo;
-        this.yZrodlo = yZrodlo;
-        this.xCel = xCel;
-        this.yCel = yCel;
         this.numerOgloszenia = numer++;
     }
 
-    public String getZrodlo() {
+    public Fabryka getZrodlo() {
         return this.zrodlo;
     }
 
-    public String getCel() {
+    public Magazyn getCel() {
         return this.cel;
+    }
+
+    public int getxZrodlo() {
+        return zrodlo.getX();
+    }
+
+    public int getyZrodlo() {
+        return zrodlo.getY();
+    }
+
+    public int getxCel() {
+        return cel.getX();
+    }
+
+    public int getyCel() {
+        return cel.getY();
+    }
+
+    public int getNumerOgloszenia() {
+        return numerOgloszenia;
     }
 
     @Override
     public String toString() {
-        return "z " + this.zrodlo + " do " + this.cel + ", numer zlecenia: " + this.numerOgloszenia;
+        return "z " + this.zrodlo.getNazwa() + " do " + this.cel.getNazwa() + ", numer zlecenia: " + this.numerOgloszenia;
     }
+
 }

@@ -11,20 +11,13 @@ public class Kontroler {
     public static void main(String[] args) {
         Listy listy = new Listy();
         Baza baza = new Baza();
-        new Baza();
-        new Baza();
-        new Baza();
-        new Baza();
+        utworzPojazd(listy, "Mercedes", baza);
+        utworzPojazd(listy, "MAN", baza);
+        new Thread(new Fabryka(listy, "Tesco")).start();
+        new Thread(new Fabryka(listy, "Castorama")).start();
+        new Thread(new Magazyn(listy, "Magazyn Andrzeja")).start();
+        new Thread(new Stacja(listy, "Orlen")).start();
 
-       // new Budynek();
-
-        //  utworzPojazd(listy, "Mercedes", baza);
-        //  utworzPojazd(listy, "MAN", baza);
-        //new Thread(new Fabryka(listy, "Tesco")).start();
-        //   new Thread(new Fabryka(listy, "Castorama")).start();
-        //  new ListyTest().porownaj();
-        // new Mapa(100,100);
-        //  new Nawigacja();
     }
 
 }
