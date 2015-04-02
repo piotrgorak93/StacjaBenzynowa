@@ -8,6 +8,12 @@ class Vertex implements Comparable<Vertex> {
     public final String name;
     public final int x;
     public final int y;
+
+    public void znajdzSkrzyzowania(List lista, int x) {
+        int found = 0;
+
+    }
+
     public Edge[] adjacencies;
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
@@ -78,6 +84,10 @@ public class Nawigacja {
         return path;
     }
 
+    public static void getX() {
+
+    }
+
     public Nawigacja() {
         List<Vertex> listaVertex = Arrays.asList(new Vertex("A", 0, 0),
                 new Vertex("B", 0, 21), new Vertex("C", 11, 21),
@@ -85,6 +95,7 @@ public class Nawigacja {
                 new Vertex("G", 16, 7), new Vertex("H", 11, 7), new Vertex("I", 16, 0),
                 new Vertex("J", 21, 7), new Vertex("K", 27, 16), new Vertex("L", 27, 0)
         );
+
 
         listaVertex.get(0).adjacencies = new Edge[]{new Edge(listaVertex.get(1), 21),
                 new Edge(listaVertex.get(8), 16)};
@@ -105,7 +116,37 @@ public class Nawigacja {
         listaVertex.get(9).adjacencies = new Edge[]{new Edge(listaVertex.get(6), 5), new Edge(listaVertex.get(4), 9)};
         listaVertex.get(10).adjacencies = new Edge[]{new Edge(listaVertex.get(4), 6), new Edge(listaVertex.get(11), 16)};
         listaVertex.get(11).adjacencies = new Edge[]{new Edge(listaVertex.get(10), 16), new Edge(listaVertex.get(8), 11)};
+        int found = 0;
+        for (int i = 0; i < listaVertex.size(); i++) {
+            for (int j = 0; j < listaVertex.size(); j++) {
+                if (listaVertex.get(i).x == listaVertex.get(j).x) {
+                    if (listaVertex.get(i).y < listaVertex.get(j).y)
+                        found++;
+                    if (found != 2) {
+                        System.out.println(listaVertex.get(i) + " " + listaVertex.get(j));
 
+                    }
+                }
+            }
+            found = 0;
+        }
+        System.out.println("Poziomo");
+        int f = 0;
+        for (int i = 0; i < listaVertex.size(); i++) {
+            for (int j = 0; j < listaVertex.size(); j++) {
+                if (listaVertex.get(i).y == listaVertex.get(j).y) {
+                    if (listaVertex.get(i).x < listaVertex.get(j).x)
+                        f++;
+                    if (f != 2) {
+                        if (!listaVertex.get(i).equals(listaVertex.get(j))) {
+                            System.out.println(listaVertex.get(i) + " " + listaVertex.get(j));
+                        }
+
+                    }
+                }
+            }
+            f = 0;
+        }
         computePaths(listaVertex.get(0));
 
         System.out.println("Distance to " + listaVertex.get(5) + ": " + listaVertex.get(5).minDistance);
@@ -113,5 +154,14 @@ public class Nawigacja {
         System.out.println("Path: " + path);
     }
 
+    public void com(int x, int rozmiar) {
+
+    }
+
+
 }
+
+
+
+
 
