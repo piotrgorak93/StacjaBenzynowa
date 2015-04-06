@@ -28,12 +28,11 @@ public class Pojazd extends Thread {
         return this.listy;
     }
 
-
     public Pojazd(Listy listy, String truckName, Baza baza) {
         this.baza = baza;
         this.listy = listy;
         setTruckName(truckName);
-        setPojemnoscBaku(new Randomizer().losujZZakresu(100, 50));
+        setPojemnoscBaku(new Randomizer().losujZZakresu(1500, 1000));
         setSpalanie(new Randomizer().losujZZakresu(45, 25));
         setIloscPaliwa(getPojemnoscBaku());
         this.pozycjaX = this.baza.pozycjaX();
@@ -162,4 +161,10 @@ public class Pojazd extends Thread {
     public void setPozycjaY(int pozycjaY) {
         this.pozycjaY = pozycjaY;
     }
+
+    public void wyliczDroge(){
+
+    }
+
+
 }

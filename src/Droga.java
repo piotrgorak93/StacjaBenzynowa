@@ -8,6 +8,7 @@ public class Droga {
     private final int yEnd;
     private String nazwa;
 
+
     public Droga(String nazwa, int xStart, int yStart, int xEnd, int yEnd) {
         this.nazwa = nazwa;
         this.xStart = xStart;

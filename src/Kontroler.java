@@ -8,16 +8,24 @@ public class Kontroler {
         listy.getListaPojazdow().add(listy.getListaPojazdow().size(), pojazd);
     }
 
-    public static void main(String[] args) {
-        Listy listy = new Listy();
-        Baza baza = new Baza();
-        utworzPojazd(listy, "Mercedes", baza);
-        utworzPojazd(listy, "MAN", baza);
-        new Thread(new Fabryka(listy, "Tesco")).start();
-        new Thread(new Fabryka(listy, "Castorama")).start();
-        new Thread(new Magazyn(listy, "Magazyn Andrzeja")).start();
-        new Thread(new Stacja(listy, "Orlen")).start();
+    private static void utworzBudynek(Budynek budynek, Listy listy) {
+        if (!budynek.getClass().getCanonicalName().equalsIgnoreCase("Magazyn"))
+            new Thread((Runnable) budynek).start();
 
     }
 
+
+    public static void main(String[] args) {
+//        Listy listy = new Listy();
+//        Baza baza = new Baza("Nazwa", listy);
+//        utworzPojazd(listy, "Mercedes", baza);
+//        utworzPojazd(listy, "MAN", baza);
+//        utworzBudynek(new Magazyn("ASD", listy), listy);
+//        utworzBudynek(new Fabryka("Tesco", listy), listy);
+//        new Thread(new Fabryka(listy, "Tesco")).start();
+//        new Thread(new Fabryka(listy, "Castorama")).start();
+//        new Thread(new Magazyn(listy, "Magazyn Andrzeja")).start();
+//        new Thread(new Stacja(listy, "Orlen")).start();
+        new Nawigacja();
+    }
 }

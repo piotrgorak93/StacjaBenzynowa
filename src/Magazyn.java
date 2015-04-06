@@ -17,7 +17,8 @@ public class Magazyn extends Budynek implements Runnable {
     private String nazwa;
     private Listy listy;
 
-    public Magazyn(Listy listy, String nazwa) {
+    public Magazyn(String nazwa, Listy listy) {
+        super(nazwa, listy);
         this.nazwa = nazwa;
         this.listy = listy;
         this.x = super.getX();

@@ -9,12 +9,15 @@ public class Stacja extends Budynek implements Runnable {
     private String nazwa;
     private Listy listy;
 
-    public Stacja(Listy listy, String nazwa) {
+    public Stacja(String nazwa, Listy listy) {
+        super(nazwa, listy);
         this.nazwa = nazwa;
         this.listy = listy;
         this.x = super.x;
         this.y = super.y;
-        System.out.println("Stacja paliw "+this.nazwa+" pozycja to (" + getX() + "," + getY() + ")");
+        System.out.println("Stacja paliw " + this.nazwa + " pozycja to (" + getX() + "," + getY() + ")");
+        listy.getListaStacji().add(listy.getListaStacji().size(), this);
+
 
     }
 

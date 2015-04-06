@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -11,6 +12,7 @@ public class Listy {
     private ArrayList<Magazyn> listaMagazynow = new ArrayList<Magazyn>();
     private ArrayList<Ogloszenie> listaOgloszen = new ArrayList<Ogloszenie>();
     private ArrayList<String> listaZleceniobiorcow = new ArrayList<String>();
+    private ArrayList<Budynek> listaBudynkow = new ArrayList<Budynek>();
 
     public ArrayList<Magazyn> getListaMagazynow() {
         return this.listaMagazynow;
@@ -82,10 +84,19 @@ public class Listy {
     }
 
     public Magazyn losujMagazyn() {
-        if (getListaMagazynow().size() == 1)
+        int liczbaMagazynow = getListaMagazynow().size();
+        if (liczbaMagazynow == 1)
             return getListaMagazynow().get(0);
         else
-            return getListaMagazynow().get(new Randomizer().losujZZakresu(getListaMagazynow().size(), 0));
+            return getListaMagazynow().get(new Randomizer().losujZZakresu(liczbaMagazynow, 0));
 
+    }
+
+    public ArrayList<Budynek> getListaBudynkow() {
+        return listaBudynkow;
+    }
+
+    public void setListaBudynkow(ArrayList<Budynek> listaBudynkow) {
+        this.listaBudynkow = listaBudynkow;
     }
 }

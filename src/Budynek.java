@@ -4,12 +4,32 @@
 public class Budynek {
     protected int x;
     protected int y;
+    protected String nazwa;
+    protected Listy listy;
 
-    public Budynek() {
+    public String getNazwa() {
+        return nazwa;
+    }
+
+    public void setNazwa(String nazwa) {
+        this.nazwa = nazwa;
+    }
+
+    public Listy getListy() {
+        return listy;
+    }
+
+    public void setListy(Listy listy) {
+        this.listy = listy;
+    }
+
+    public Budynek(String nazwa, Listy listy) {
+        setListy(listy);
+        setNazwa(nazwa);
         Object[] tablicaXY = new Randomizer().losujPrzyDrodze();
         setX((Integer) tablicaXY[0]);
         setY((Integer) tablicaXY[1]);
-        System.out.print("Przy drodze "+tablicaXY[2]+" utworzono budynek ");
+        System.out.print("Przy drodze " + tablicaXY[2] + " utworzono budynek ");
     }
 
     public int getX() {

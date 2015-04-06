@@ -7,8 +7,10 @@ public class Fabryka extends Budynek implements Runnable {
     private Listy listy;
     private String nazwa;
 
-    public Fabryka(Listy listy, String nazwa) {
-        this.listy = listy;
+    public Fabryka(String nazwa, Listy listy) {
+        super(nazwa, listy);
+        this.nazwa = super.getNazwa();
+        this.listy = super.getListy();
         this.x = super.x;
         this.y = super.y;
         setNazwa(nazwa);

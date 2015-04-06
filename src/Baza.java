@@ -5,10 +5,11 @@ public class Baza extends Budynek {
     private int x;
     private int y;
 
-    public Baza() {
+    public Baza(String nazwa, Listy listy) {
+        super(nazwa, listy);
         this.x = super.getX();
         this.y = super.getY();
-        System.out.println("Baza pozycja to (" + pozycjaX()+ "," + pozycjaY() + ")");
+        System.out.println("Baza pozycja to (" + pozycjaX() + "," + pozycjaY() + ")");
     }
 
     public int pozycjaX() {
