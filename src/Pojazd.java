@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -9,6 +10,7 @@ public class Pojazd extends Thread {
     private String truckName;
     private boolean jade = false;
     private int spalanie;
+    private List<Vertex> lista;
 
     public Ogloszenie getMojeZlecenie() {
         return mojeZlecenie;
@@ -109,8 +111,8 @@ public class Pojazd extends Thread {
 
     public void jestemWolny() {
 
-        System.out.println(this.getTruckName() + " dojechal do "+getMojeZlecenie().getCel().getNazwa() +
-                "("+getMojeZlecenie().getxCel()+","+getMojeZlecenie().getyCel()+")");
+        System.out.println(this.getTruckName() + " dojechal do " + getMojeZlecenie().getCel().getNazwa() +
+                "(" + getMojeZlecenie().getxCel() + "," + getMojeZlecenie().getyCel() + ")");
         setMojeZlecenie(null);
         this.jade = false;
     }
@@ -135,13 +137,23 @@ public class Pojazd extends Thread {
         int xCel = getMojeZlecenie().getxCel();
         int yCel = getMojeZlecenie().getyCel();
 
-        System.out.println(this.getTruckName() + " jedzie z "+getMojeZlecenie().getZrodlo().getNazwa() +" ("+xZrodlo+","+yZrodlo+") " +
-                "do "+getMojeZlecenie().getCel().getNazwa()+" ("+xCel+","+yCel+"), nr zlecenia "+getMojeZlecenie().getNumerOgloszenia());
+        System.out.println(this.getTruckName() + " jedzie z " + getMojeZlecenie().getZrodlo().getNazwa() + " (" + xZrodlo + "," + yZrodlo + ") " +
+                "do " + getMojeZlecenie().getCel().getNazwa() + " (" + xCel + "," + yCel + "), nr zlecenia " + getMojeZlecenie().getNumerOgloszenia());
+        lista = new Nawigacja(new Vertex("moja pozycja", getPozycjaX(), getPozycjaY()),
+                new Vertex(getMojeZlecenie().getZrodlo().getNazwa(), getMojeZlecenie().getxZrodlo(), getMojeZlecenie().getyZrodlo()), getListy()).wyliczDroge();
         try {
-            TimeUnit.SECONDS.sleep(5);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("Drukuje z pojazdu: " + lista);
+        for (int i = 1; i < lista.size(); i++) {
+            System.out.println("Moja pozycja " + getPozycjaX() + " " + getPozycjaY());
+            zmieniajPozycje(lista.get(i));
+
+        }
+        System.out.println(this.getTruckName()+" jestem w pozycji "+getPozycjaX()+" "+getPozycjaY());
+
 
         this.jade = true;
     }
@@ -152,6 +164,7 @@ public class Pojazd extends Thread {
 
     public void setPozycjaX(int pozycjaX) {
         this.pozycjaX = pozycjaX;
+        System.out.println(this.getTruckName()+" Moj x to " + this.pozycjaX+" moj y to "+getPozycjaY());
     }
 
     public int getPozycjaY() {
@@ -160,11 +173,30 @@ public class Pojazd extends Thread {
 
     public void setPozycjaY(int pozycjaY) {
         this.pozycjaY = pozycjaY;
-    }
-
-    public void wyliczDroge(){
+        System.out.println(this.getTruckName()+" Moj x to "+getPozycjaX()+" Moj y to " + this.pozycjaY);
 
     }
 
+    private void zmieniajPozycje(Vertex vertex) {
+        do {
+            int pozycjaSamochoduX = getPozycjaX();
+            int pozycjaSamochoduY = getPozycjaY();
+            if (vertex.x == pozycjaSamochoduX) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (vertex.y < pozycjaSamochoduY)
+                    setPozycjaY(--pozycjaSamochoduY);
+                else
+                    setPozycjaY(++pozycjaSamochoduY);
+            } else if (vertex.x < pozycjaSamochoduX) {
+                setPozycjaX(--pozycjaSamochoduX);
+            } else
+                setPozycjaX(++pozycjaSamochoduX);
+        } while (vertex.x != getPozycjaX() && vertex.y != getPozycjaY());
+        System.out.println("dojechałem do punktu "+vertex.name);
+    }
 
 }

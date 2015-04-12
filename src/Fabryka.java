@@ -15,6 +15,7 @@ public class Fabryka extends Budynek implements Runnable {
         this.y = super.y;
         setNazwa(nazwa);
         System.out.println("Fabryka " + this.nazwa + " pozycja to (" + getX() + "," + getY() + ")");
+        listy.getListaFabryk().add(listy.getListaFabryk().size(), this);
     }
 
     public synchronized void wystawOgloszenie() {

@@ -16,16 +16,16 @@ public class Kontroler {
 
 
     public static void main(String[] args) {
-//        Listy listy = new Listy();
-//        Baza baza = new Baza("Nazwa", listy);
-//        utworzPojazd(listy, "Mercedes", baza);
+        Listy listy = new Listy();
+        Baza baza = new Baza("Nazwa", listy);
+      utworzPojazd(listy, "Mercedes", baza);
 //        utworzPojazd(listy, "MAN", baza);
-//        utworzBudynek(new Magazyn("ASD", listy), listy);
-//        utworzBudynek(new Fabryka("Tesco", listy), listy);
+        utworzBudynek(new Magazyn("ASD", listy), listy);
+        utworzBudynek(new Fabryka("Tesco", listy), listy);
 //        new Thread(new Fabryka(listy, "Tesco")).start();
 //        new Thread(new Fabryka(listy, "Castorama")).start();
-//        new Thread(new Magazyn(listy, "Magazyn Andrzeja")).start();
+     new Thread(new Magazyn("Magazyn Andrzeja",listy)).start();
 //        new Thread(new Stacja(listy, "Orlen")).start();
-        new Nawigacja();
+
     }
 }

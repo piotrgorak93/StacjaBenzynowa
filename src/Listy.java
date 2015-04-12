@@ -88,7 +88,7 @@ public class Listy {
         if (liczbaMagazynow == 1)
             return getListaMagazynow().get(0);
         else
-            return getListaMagazynow().get(new Randomizer().losujZZakresu(liczbaMagazynow, 0));
+            return getListaMagazynow().get(new Randomizer().losujZZakresu(liczbaMagazynow-1, 0));
 
     }
 
@@ -98,5 +98,10 @@ public class Listy {
 
     public void setListaBudynkow(ArrayList<Budynek> listaBudynkow) {
         this.listaBudynkow = listaBudynkow;
+    }
+    public void pobierzBudynki(){
+        getListaBudynkow().addAll(getListaFabryk());
+        getListaBudynkow().addAll(getListaMagazynow());
+        getListaBudynkow().addAll(getListaStacji());
     }
 }
