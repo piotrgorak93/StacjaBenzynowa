@@ -152,7 +152,7 @@ public class Pojazd extends Thread {
             zmieniajPozycje(lista.get(i));
 
         }
-        System.out.println(this.getTruckName()+" jestem w pozycji "+getPozycjaX()+" "+getPozycjaY());
+        System.out.println(this.getTruckName() + " jestem w pozycji " + getPozycjaX() + " " + getPozycjaY());
 
 
         this.jade = true;
@@ -164,7 +164,7 @@ public class Pojazd extends Thread {
 
     public void setPozycjaX(int pozycjaX) {
         this.pozycjaX = pozycjaX;
-        System.out.println(this.getTruckName()+" Moj x to " + this.pozycjaX+" moj y to "+getPozycjaY());
+        System.out.println(this.getTruckName() + " Moj x to " + this.pozycjaX + " moj y to " + getPozycjaY());
     }
 
     public int getPozycjaY() {
@@ -173,11 +173,12 @@ public class Pojazd extends Thread {
 
     public void setPozycjaY(int pozycjaY) {
         this.pozycjaY = pozycjaY;
-        System.out.println(this.getTruckName()+" Moj x to "+getPozycjaX()+" Moj y to " + this.pozycjaY);
+        System.out.println(this.getTruckName() + " Moj x to " + getPozycjaX() + " Moj y to " + this.pozycjaY);
 
     }
 
     private void zmieniajPozycje(Vertex vertex) {
+        boolean czySkonczyc = false;
         do {
             int pozycjaSamochoduX = getPozycjaX();
             int pozycjaSamochoduY = getPozycjaY();
@@ -187,16 +188,22 @@ public class Pojazd extends Thread {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (vertex.y < pozycjaSamochoduY)
-                    setPozycjaY(--pozycjaSamochoduY);
+                if (vertex.y == pozycjaSamochoduY)
+                    czySkonczyc = true;
+                else {
+                    if (vertex.y < pozycjaSamochoduY)
+                        setPozycjaY(--pozycjaSamochoduY);
+                    else
+                        setPozycjaY(++pozycjaSamochoduY);
+                }
+            } else {
+                if (vertex.x < pozycjaSamochoduX)
+                    setPozycjaX(--pozycjaSamochoduX);
                 else
-                    setPozycjaY(++pozycjaSamochoduY);
-            } else if (vertex.x < pozycjaSamochoduX) {
-                setPozycjaX(--pozycjaSamochoduX);
-            } else
-                setPozycjaX(++pozycjaSamochoduX);
-        } while (vertex.x != getPozycjaX() && vertex.y != getPozycjaY());
-        System.out.println("dojechałem do punktu "+vertex.name);
+                    setPozycjaX(++pozycjaSamochoduX);
+            }
+        } while (!czySkonczyc);
+        System.out.println("dojechałem do punktu " + vertex.name);
     }
 
 }
