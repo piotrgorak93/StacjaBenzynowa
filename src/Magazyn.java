@@ -23,7 +23,8 @@ public class Magazyn extends Budynek implements Runnable {
         this.listy = listy;
         this.x = super.getX();
         this.y = super.getY();
-        System.out.println(this.nazwa + " pozycja to (" + getX() + "," + getY() + ")");
+        setNazwa(nazwa);
+        System.out.println("Magazyn " + this.nazwa + " pozycja to (" + getX() + "," + getY() + ")");
         listy.getListaMagazynow().add(listy.getListaMagazynow().size(), this);
 
     }
