@@ -106,7 +106,6 @@ public class Nawigacja {
     }
 
     public double minDystans(Vertex dokad) {
-        System.out.println("Distance to " + ": " + dokad.minDistance);
         return dokad.minDistance;
     }
 
