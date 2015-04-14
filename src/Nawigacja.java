@@ -100,9 +100,14 @@ public class Nawigacja {
 
     public List<Vertex> wyliczDroge(Vertex skad, Vertex dokad) {
         computePaths(skad);
-        System.out.println("Distance to " + ": " + dokad.minDistance);
+        minDystans(dokad);
         //   System.out.println("Path: " + path);
         return getShortestPathTo(dokad);
+    }
+
+    public double minDystans(Vertex dokad) {
+        System.out.println("Distance to " + ": " + dokad.minDistance);
+        return dokad.minDistance;
     }
 
     public static void computePaths(Vertex source) {
