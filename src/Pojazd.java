@@ -8,7 +8,7 @@ public class Pojazd extends Thread {
     private float iloscPaliwa;
     private String truckName;
     private boolean jade = false;
-    private int spalanie;
+    private float spalanie;
     private Vertex mojaPozycja = new Vertex("moja pozycja", getPozycjaX(), getPozycjaY());
     private boolean czyJechacField = true;
     private Ogloszenie mojeZlecenie;
@@ -222,7 +222,7 @@ public class Pojazd extends Thread {
     public void setPozycjaX(int pozycjaX) {
         this.pozycjaX = pozycjaX;
         spalajPaliwo();
-        System.out.println(this.getTruckName() + " Moj x to " + this.pozycjaX + " moj y to " + getPozycjaY());
+        System.out.println(this.getTruckName() + " ustawiłem pozycje na (" + this.pozycjaX + "," + getPozycjaY() + ")");
     }
 
     public int getPozycjaY() {
@@ -232,8 +232,7 @@ public class Pojazd extends Thread {
     public void setPozycjaY(int pozycjaY) {
         this.pozycjaY = pozycjaY;
         spalajPaliwo();
-        System.out.println(this.getTruckName() + " Moj x to " + getPozycjaX() + " Moj y to " + this.pozycjaY);
-
+        System.out.println(this.getTruckName() + " ustawiłem pozycje na (" + getPozycjaX() + "," + this.pozycjaY + ")");
     }
 
     private void zmieniajPozycje(Vertex vertex) {
@@ -258,9 +257,8 @@ public class Pojazd extends Thread {
             }
 
         } while (!czySkonczyc);
-
         System.out.println(getTruckName() + " dojechałem do punktu " + vertex.name);
-        System.out.println("Mam w baku " + getIloscPaliwa());
+        System.out.println("Mam w baku " + Math.round(getIloscPaliwa()*100)/100);
     }
 
 
@@ -284,7 +282,10 @@ public class Pojazd extends Thread {
     }
 
     private void spalajPaliwo() {
-        double paliwo = getIloscPaliwa() - spalanie / 100;
+        double paliwo = getIloscPaliwa();
+        System.out.println(spalanie / 100);
+        paliwo -= (spalanie / 100);
         setIloscPaliwa((float) paliwo);
+
     }
 }
