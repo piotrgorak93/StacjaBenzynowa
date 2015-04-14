@@ -10,6 +10,9 @@ public class Pojazd extends Thread {
     private boolean jade = false;
     private int spalanie;
     private List<Vertex> mojaTrasa;
+    private Nawigacja gps;
+    private Vertex mojaPozycja = new Vertex("moja pozycja", getPozycjaX(), getPozycjaY());
+    private List<Vertex> mojaTrasa2;
 
     public Ogloszenie getMojeZlecenie() {
         return mojeZlecenie;
@@ -128,36 +131,58 @@ public class Pojazd extends Thread {
 
     }
 
+    public Vertex getMojaPozycja() {
+        return mojaPozycja;
+    }
+
+    public void setMojaPozycja(Vertex mojaPozycja) {
+        this.mojaPozycja = mojaPozycja;
+    }
+
     public void jedz() {
         this.jade = true;
+        Vertex zrodlo;
+        Vertex cel;
         int xZrodlo = getMojeZlecenie().getxZrodlo();
         int yZrodlo = getMojeZlecenie().getyZrodlo();
-
         int xCel = getMojeZlecenie().getxCel();
         int yCel = getMojeZlecenie().getyCel();
+
         System.out.println("Moje zlecenie: " + mojeZlecenie);
         System.out.println(this.getTruckName() + " jedzie z " + getMojeZlecenie().getZrodlo().getNazwa() + " (" + xZrodlo + "," + yZrodlo + ") " +
                 "do " + getMojeZlecenie().getCel().getNazwa() + " (" + xCel + "," + yCel + "), nr zlecenia " + getMojeZlecenie().getNumerOgloszenia());
-        Nawigacja gps = new Nawigacja((new Vertex("moja pozycja", getPozycjaX(), getPozycjaY())), listy);
-        Vertex szukany = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
-        mojaTrasa = gps.wyliczDroge(szukany);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        funkcjaJazdy();
+        gps = new Nawigacja(getMojaPozycja(), listy);
+        zrodlo = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
+        mojaTrasa = gps.wyliczDroge(getMojaPozycja(), zrodlo);
+        czekajCzas(100);
+        funkcjaJazdy(mojaTrasa);
         System.out.println(this.getTruckName() + " jestem w pozycji " + getPozycjaX() + " " + getPozycjaY());
+
+        setMojaPozycja(gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()));
+        Nawigacja gps2 = new Nawigacja(getMojaPozycja(), listy);
+        System.out.println("MOJA POZYCJA" + getMojaPozycja());
+        cel = gps2.znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa());
+        mojaTrasa2 = gps2.wyliczDroge(gps2.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()), cel);
+        czekajCzas(100);
+        funkcjaJazdy(mojaTrasa2);
 
 
         this.jade = true;
     }
 
-    private void funkcjaJazdy() {
-        System.out.println("Drukuje z pojazdu: " + mojaTrasa);
-        for (int i = 1; i < mojaTrasa.size(); i++) {
+    private void czekajCzas(int czas) {
+        try {
+            Thread.sleep(czas);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void funkcjaJazdy(List<Vertex> trasa) {
+        System.out.println("Drukuje z pojazdu: " + trasa);
+        for (int i = 1; i < trasa.size(); i++) {
             System.out.println("Moja pozycja " + getPozycjaX() + " " + getPozycjaY());
-            zmieniajPozycje(mojaTrasa.get(i));
+            zmieniajPozycje(trasa.get(i));
 
         }
     }
@@ -187,11 +212,7 @@ public class Pojazd extends Thread {
             int pozycjaSamochoduX = getPozycjaX();
             int pozycjaSamochoduY = getPozycjaY();
             if (vertex.x == pozycjaSamochoduX) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                czekajCzas(100);
                 if (vertex.y == pozycjaSamochoduY)
                     czySkonczyc = true;
                 else {

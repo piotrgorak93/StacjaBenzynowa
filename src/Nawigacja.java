@@ -58,7 +58,6 @@ public class Nawigacja {
     public Nawigacja(Vertex mojaPozycja, Listy listy) {
         this.mojaPozycja = mojaPozycja;
         this.listaBudynkow = listy;
-        listy.pobierzBudynki();
         listaVertex = new ArrayList<>(Arrays.asList(new Vertex("A", 0, 0),
                 new Vertex("B", 0, 21), new Vertex("C", 11, 21),
                 new Vertex("D", 0, 30), new Vertex("E", 21, 16), new Vertex("F", 21, 30),
@@ -99,8 +98,8 @@ public class Nawigacja {
         }
     }
 
-    public List<Vertex> wyliczDroge(Vertex dokad) {
-        computePaths(this.mojaPozycja);
+    public List<Vertex> wyliczDroge(Vertex skad, Vertex dokad) {
+        computePaths(skad);
         System.out.println("Distance to " + ": " + dokad.minDistance);
         //   System.out.println("Path: " + path);
         return getShortestPathTo(dokad);
