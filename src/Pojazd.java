@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
@@ -10,7 +9,7 @@ public class Pojazd extends Thread {
     private String truckName;
     private boolean jade = false;
     private int spalanie;
-    private List<Vertex> lista;
+    private List<Vertex> mojaTrasa;
 
     public Ogloszenie getMojeZlecenie() {
         return mojeZlecenie;
@@ -136,26 +135,31 @@ public class Pojazd extends Thread {
 
         int xCel = getMojeZlecenie().getxCel();
         int yCel = getMojeZlecenie().getyCel();
-
+        System.out.println("Moje zlecenie: " + mojeZlecenie);
         System.out.println(this.getTruckName() + " jedzie z " + getMojeZlecenie().getZrodlo().getNazwa() + " (" + xZrodlo + "," + yZrodlo + ") " +
                 "do " + getMojeZlecenie().getCel().getNazwa() + " (" + xCel + "," + yCel + "), nr zlecenia " + getMojeZlecenie().getNumerOgloszenia());
-        lista = new Nawigacja(new Vertex("moja pozycja", getPozycjaX(), getPozycjaY()),
-                new Vertex(getMojeZlecenie().getZrodlo().getNazwa(), getMojeZlecenie().getxZrodlo(), getMojeZlecenie().getyZrodlo()), getListy()).wyliczDroge();
+        Nawigacja gps = new Nawigacja((new Vertex("moja pozycja", getPozycjaX(), getPozycjaY())), listy);
+        Vertex szukany = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
+        mojaTrasa = gps.wyliczDroge(szukany);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Drukuje z pojazdu: " + lista);
-        for (int i = 1; i < lista.size(); i++) {
-            System.out.println("Moja pozycja " + getPozycjaX() + " " + getPozycjaY());
-            zmieniajPozycje(lista.get(i));
-
-        }
+        funkcjaJazdy();
         System.out.println(this.getTruckName() + " jestem w pozycji " + getPozycjaX() + " " + getPozycjaY());
 
 
         this.jade = true;
+    }
+
+    private void funkcjaJazdy() {
+        System.out.println("Drukuje z pojazdu: " + mojaTrasa);
+        for (int i = 1; i < mojaTrasa.size(); i++) {
+            System.out.println("Moja pozycja " + getPozycjaX() + " " + getPozycjaY());
+            zmieniajPozycje(mojaTrasa.get(i));
+
+        }
     }
 
     public int getPozycjaX() {
@@ -205,5 +209,6 @@ public class Pojazd extends Thread {
         } while (!czySkonczyc);
         System.out.println("dojechałem do punktu " + vertex.name);
     }
+
 
 }
