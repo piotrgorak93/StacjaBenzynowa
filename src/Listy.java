@@ -13,7 +13,6 @@ public class Listy {
     private ArrayList<Ogloszenie> listaOgloszen = new ArrayList<Ogloszenie>();
     private ArrayList<String> listaZleceniobiorcow = new ArrayList<String>();
     private ArrayList<Budynek> listaBudynkow = new ArrayList<Budynek>();
-    private ArrayList<Vertex> listaCustomVertex = new ArrayList<>();
 
     public ArrayList<Magazyn> getListaMagazynow() {
         return this.listaMagazynow;
@@ -89,7 +88,7 @@ public class Listy {
         if (liczbaMagazynow == 1)
             return getListaMagazynow().get(0);
         else
-            return getListaMagazynow().get(new Randomizer().losujZZakresu(liczbaMagazynow - 1, 0));
+            return getListaMagazynow().get(new Randomizer().losujZZakresu(liczbaMagazynow-1, 0));
 
     }
 
@@ -100,18 +99,9 @@ public class Listy {
     public void setListaBudynkow(ArrayList<Budynek> listaBudynkow) {
         this.listaBudynkow = listaBudynkow;
     }
-
-    public void pobierzBudynki() {
+    public void pobierzBudynki(){
         getListaBudynkow().addAll(getListaFabryk());
         getListaBudynkow().addAll(getListaMagazynow());
         getListaBudynkow().addAll(getListaStacji());
-    }
-
-    public ArrayList<Vertex> getListaCustomVertex() {
-        return listaCustomVertex;
-    }
-
-    public void setListaCustomVertex(ArrayList<Vertex> listaCustomVertex) {
-        this.listaCustomVertex = listaCustomVertex;
     }
 }

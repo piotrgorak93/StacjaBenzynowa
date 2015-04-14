@@ -55,11 +55,12 @@ public class Nawigacja {
     ArrayList<Edge> tempArr = new ArrayList<Edge>();
     Vertex to;
 
-    public Nawigacja(Vertex mojaPozycja, Listy listy) {
+    public Nawigacja(Vertex mojaPozycja, Vertex to, Listy listy) {
         this.mojaPozycja = mojaPozycja;
+        this.to = to;
         this.listaBudynkow = listy;
         listy.pobierzBudynki();
-        listaVertex = new ArrayList<>(Arrays.asList(new Vertex("A", 0, 0),
+        listaVertex = new ArrayList<Vertex>(Arrays.asList(new Vertex("A", 0, 0),
                 new Vertex("B", 0, 21), new Vertex("C", 11, 21),
                 new Vertex("D", 0, 30), new Vertex("E", 21, 16), new Vertex("F", 21, 30),
                 new Vertex("G", 16, 7), new Vertex("H", 11, 7), new Vertex("I", 16, 0),
@@ -67,10 +68,10 @@ public class Nawigacja {
 
         ));
         for (int i = 0; i < listy.getListaBudynkow().size(); i++) {
-            dodajDoListyLokalnychVertex(new Vertex(listy.getListaBudynkow().get(i).getNazwa(),
+            dodajDoListy(new Vertex(listy.getListaBudynkow().get(i).getNazwa(),
                     listy.getListaBudynkow().get(i).getX(), listy.getListaBudynkow().get(i).getY()));
         }
-        dodajDoListyLokalnychVertex(this.mojaPozycja);
+        dodajDoListy(this.mojaPozycja);
         Multimap<Vertex, Vertex> mapa = HashMultimap.create();
         pionowo(listaVertex, mapa);
         poziomo(listaVertex, mapa);
@@ -99,11 +100,11 @@ public class Nawigacja {
         }
     }
 
-    public List<Vertex> wyliczDroge(Vertex dokad) {
+    public List<Vertex> wyliczDroge() {
         computePaths(this.mojaPozycja);
-        System.out.println("Distance to " + ": " + dokad.minDistance);
+        System.out.println("Distance to " + listaVertex.get(0) + ": " + listaVertex.get(0).minDistance);
         //   System.out.println("Path: " + path);
-        return getShortestPathTo(dokad);
+        return getShortestPathTo(listaVertex.get(0));
     }
 
     public static void computePaths(Vertex source) {
@@ -176,17 +177,11 @@ public class Nawigacja {
         }
     }
 
-    public void dodajDoListyLokalnychVertex(Vertex param) {
+    public void dodajDoListy(Vertex param) {
         this.listaVertex.add(this.listaVertex.size(), param);
     }
 
-    public Vertex znajdzVertexPoNazwie(String nazwa) {
-        for (Vertex vertex : listaVertex) {
-            if (vertex.name.equals(nazwa))
-                return vertex;
-        }
-        return null;
-    }
+
 }
 
 
