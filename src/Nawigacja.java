@@ -101,7 +101,6 @@ public class Nawigacja {
     public List<Vertex> wyliczDroge(Vertex skad, Vertex dokad) {
         computePaths(skad);
         minDystans(dokad);
-        //   System.out.println("Path: " + path);
         return getShortestPathTo(dokad);
     }
 

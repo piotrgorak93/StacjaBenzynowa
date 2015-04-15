@@ -5,7 +5,7 @@ import java.util.List;
  */
 public class Pojazd extends Thread {
     private int pojemnoscBaku;
-    private float iloscPaliwa;
+    private double iloscPaliwa;
     private String truckName;
     private boolean jade = false;
     private float spalanie;
@@ -28,7 +28,6 @@ public class Pojazd extends Thread {
         this.pozycjaX = this.baza.pozycjaX();
         this.pozycjaY = this.baza.pozycjaY();
         System.out.println(this);
-
     }
 
     public Ogloszenie getMojeZlecenie() {
@@ -52,11 +51,11 @@ public class Pojazd extends Thread {
         this.pojemnoscBaku = pojemnoscBaku;
     }
 
-    public float getIloscPaliwa() {
+    public double getIloscPaliwa() {
         return iloscPaliwa;
     }
 
-    public void setIloscPaliwa(float iloscPaliwa) {
+    public void setIloscPaliwa(double iloscPaliwa) {
         this.iloscPaliwa = iloscPaliwa;
     }
 
@@ -79,7 +78,6 @@ public class Pojazd extends Thread {
         while (true) {
             while (czyWolny()) {
                 jestemZajety();
-
             }
         }
     }
@@ -88,11 +86,6 @@ public class Pojazd extends Thread {
         this.listy = listy;
     }
 
-    public void bioreZlecenie() {
-        Vertex zrodlo;
-        Vertex cel;
-
-    }
 
     public boolean czyWolny() {
         return !this.jade;
@@ -100,8 +93,9 @@ public class Pojazd extends Thread {
     }
 
     public void jestemZajety() {
-
-        listy.wezZlecenie(this);
+        if (isCzyJechacField())
+            listy.wezZlecenie(this);
+        else return;
         while (czyJechac()) {
             jedz();
             jestemWolny();
@@ -120,8 +114,6 @@ public class Pojazd extends Thread {
 
     public void jestemWolny() {
 
-        System.out.println(this.getTruckName() + " dojechal do " + getMojeZlecenie().getCel().getNazwa() +
-                "(" + getMojeZlecenie().getxCel() + "," + getMojeZlecenie().getyCel() + ")");
         setMojeZlecenie(null);
         this.jade = false;
     }
@@ -160,13 +152,13 @@ public class Pojazd extends Thread {
         int yCel = getMojeZlecenie().getyCel();
 
         System.out.println("Moje zlecenie: " + mojeZlecenie);
-        System.out.println(this.getTruckName() + " jedzie z " + getMojeZlecenie().getZrodlo().getNazwa() + " (" + xZrodlo + "," + yZrodlo + ") " +
+        System.out.println(this.getTruckName() + " wykonuje zlecenie " + getMojeZlecenie().getZrodlo().getNazwa() + " (" + xZrodlo + "," + yZrodlo + ") " +
                 "do " + getMojeZlecenie().getCel().getNazwa() + " (" + xCel + "," + yCel + "), nr zlecenia " + getMojeZlecenie().getNumerOgloszenia());
         gps = new Nawigacja(getMojaPozycja(), listy);
         zrodlo = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
         mojaTrasa = gps.wyliczDroge(getMojaPozycja(), zrodlo);
         dystans = gps.minDystans(zrodlo);
-        System.out.println("W trasie spale " + ileSpale(dystans));
+        System.out.println("W trasie do " + zrodlo + " spale " + ileSpale(dystans));
         setCzyJechacField(czyDojade(dystans));
 
         if (sprawdzCzyWyjsc()) return;
@@ -179,7 +171,7 @@ public class Pojazd extends Thread {
         cel = gps.znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa());
         mojaTrasa = gps.wyliczDroge(gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()), cel);
         dystans = gps.minDystans(cel);
-        System.out.println("W trasie spale " + ileSpale(dystans));
+        System.out.println("W trasie do " + cel + " spale " + ileSpale(dystans));
         setCzyJechacField(czyDojade(dystans));
 
         if (sprawdzCzyWyjsc()) return;
@@ -210,7 +202,6 @@ public class Pojazd extends Thread {
     private void funkcjaJazdy(List<Vertex> trasa) {
         System.out.println("Drukuje z pojazdu: " + trasa);
         for (int i = 1; i < trasa.size(); i++) {
-            System.out.println("Moja pozycja " + getPozycjaX() + " " + getPozycjaY());
             zmieniajPozycje(trasa.get(i));
         }
     }
@@ -257,8 +248,8 @@ public class Pojazd extends Thread {
             }
 
         } while (!czySkonczyc);
-        System.out.println(getTruckName() + " dojechałem do punktu " + vertex.name);
-        System.out.println("Mam w baku " + Math.round(getIloscPaliwa()*100)/100);
+        System.out.println(getTruckName() + ": dojechałem do punktu " + vertex.name);
+        System.out.println("Mam w baku " + Math.round(getIloscPaliwa() * 100) / 100 + " l paliwa");
     }
 
 
@@ -283,7 +274,6 @@ public class Pojazd extends Thread {
 
     private void spalajPaliwo() {
         double paliwo = getIloscPaliwa();
-        System.out.println(spalanie / 100);
         paliwo -= (spalanie / 100);
         setIloscPaliwa((float) paliwo);
 
