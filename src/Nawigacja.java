@@ -72,7 +72,7 @@ public class Nawigacja {
             dodajDoListyLokalnychVertex(new Vertex(listy.getListaBudynkow().get(i).getNazwa(),
                     listy.getListaBudynkow().get(i).getX(), listy.getListaBudynkow().get(i).getY()));
         }
-        dodajDoListyLokalnychVertex(vertexDoDodania);
+        dodajDoListyLokalnychVertex(this.vertexDoDodania);
         Multimap<Vertex, Vertex> mapa = HashMultimap.create();
         pionowo(listaVertex, mapa);
         poziomo(listaVertex, mapa);
@@ -182,8 +182,9 @@ public class Nawigacja {
     }
 
     public void dodajDoListyLokalnychVertex(Vertex param) {
-        if (param != null)
-            this.listaVertex.add(this.listaVertex.size(), param);
+        if (!listaVertex.contains(param))
+            listaVertex.add(listaVertex.size(), param);
+
     }
 
     public Vertex znajdzVertexPoNazwie(String nazwa) {

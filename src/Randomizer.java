@@ -10,7 +10,7 @@ public class Randomizer {
     private ArrayList<Droga> pasujaceY = new ArrayList<Droga>();
     private ArrayList<Object> wylosowane = new ArrayList<Object>();
     private Object tab = new Object();
-
+    private ArrayList<Budynek> listaBudynkow;
     Object tableToReturn[] = new Object[3];
     private boolean przyDrodze = false;
     final Droga tablicaDrog[] = {new Droga("A-B", 0, 0, 0, 21), new Droga("B-D", 0, 21, 0, 30), new Droga("D-F", 0, 30, 21, 30), new Droga("B-C", 0, 21, 11, 21),
@@ -40,46 +40,57 @@ public class Randomizer {
         return r.nextInt(30);
     }
 
-    public Object[] losujPrzyDrodze() {
+    public Object[] losujPrzyDrodze(Listy listy) {
+        this.listaBudynkow = listy.getListaBudynkow();
         int x;
         int y;
 
+
         while (!czyPrzyDrodze()) {
+            do {
+                x = new Randomizer().losujX();
+                y = new Randomizer().losujY();
 
-
-            x = new Randomizer().losujX();
-            y = new Randomizer().losujY();
-
-            for (Droga aTablicaDrog1 : this.tablicaDrog) {
-                if (x >= aTablicaDrog1.getxStart())
-                    if (x <= aTablicaDrog1.getxEnd()) {
-                        this.pasujaceX.add(this.pasujaceX.size(), aTablicaDrog1);
-                    }
-            }
-            for (Droga aTablicaDrog : this.tablicaDrog) {
-                if (y >= aTablicaDrog.getyStart()) {
-                    if (y <= aTablicaDrog.getyEnd()) {
-                        this.pasujaceY.add(this.pasujaceY.size(), aTablicaDrog);
-                    }
+                for (Droga aTablicaDrog1 : this.tablicaDrog) {
+                    if (x >= aTablicaDrog1.getxStart())
+                        if (x <= aTablicaDrog1.getxEnd()) {
+                            this.pasujaceX.add(this.pasujaceX.size(), aTablicaDrog1);
+                        }
                 }
+                for (Droga aTablicaDrog : this.tablicaDrog) {
+                    if (y >= aTablicaDrog.getyStart()) {
+                        if (y <= aTablicaDrog.getyEnd()) {
+                            this.pasujaceY.add(this.pasujaceY.size(), aTablicaDrog);
+                        }
+                    }
 
-            }
-            if (porownajArrayListy(this.pasujaceX, this.pasujaceY, x, y)) {
-                if (!czyZajete()) {
-                    this.wylosowane.add(wylosowane.size(), this.tab);
-                    tableToReturn[0] = x;
-                    tableToReturn[1] = y;
                 }
-            } else {
-                this.pasujaceX.clear();
-                this.pasujaceY.clear();
-            }
+                if (porownajArrayListy(this.pasujaceX, this.pasujaceY, x, y)) {
+                    if (!czyZajete()) {
+                        this.wylosowane.add(wylosowane.size(), this.tab);
+                        tableToReturn[0] = x;
+                        tableToReturn[1] = y;
+                    }
+                } else {
+                    this.pasujaceX.clear();
+                    this.pasujaceY.clear();
+                }
+            } while ( czyMiejsceZajete(x, y));
         }
         return tableToReturn;
     }
 
     private boolean czyZajete() {
         return !wylosowane.contains(this.tab);
+    }
+
+    private boolean czyMiejsceZajete(int x, int y) {
+        for (Budynek budynek : this.listaBudynkow) {
+            if (x == budynek.getX() && y == budynek.getY())
+                return true;
+
+        }
+        return false;
     }
 
     private boolean czyPrzyDrodze() {

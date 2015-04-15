@@ -26,10 +26,10 @@ public class Budynek {
     public Budynek(String nazwa, Listy listy) {
         setListy(listy);
         setNazwa(nazwa);
-        Object[] tablicaXY = new Randomizer().losujPrzyDrodze();
+        Object[] tablicaXY = new Randomizer().losujPrzyDrodze(getListy());
         setX((Integer) tablicaXY[0]);
         setY((Integer) tablicaXY[1]);
-        System.out.println("Przy drodze " + tablicaXY[2] + " utworzono budynek " + nazwa + " w pozycji (" + getX() + "," + getY() + ")");
+        System.out.println("Przy drodze " + tablicaXY[2] + " utworzono budynek " + nazwa + " w pozycji (" + tablicaXY[0] + "," + tablicaXY[1] + ")");
         listy.getListaBudynkow().add(listy.getListaBudynkow().size(), this);
     }
 

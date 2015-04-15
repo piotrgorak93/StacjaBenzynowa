@@ -15,11 +15,8 @@ public class Stacja extends Budynek implements Runnable {
         this.listy = listy;
         this.x = super.x;
         this.y = super.y;
-        System.out.println("Stacja paliw " + this.nazwa + " pozycja to (" + getX() + "," + getY() + ")");
         listy.getListaStacji().add(listy.getListaStacji().size(), this);
-
-
-    }
+}
 
     @Override
     public void run() {

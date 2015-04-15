@@ -1,3 +1,7 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 /**
@@ -158,7 +162,7 @@ public class Pojazd extends Thread {
         gps = new Nawigacja(getMojaPozycja(), listy, dodajVertex());
         zrodlo = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
         mojaTrasa = gps.wyliczDroge(getMojaPozycja(), zrodlo);
-        dystans = gps.minDystans(zrodlo);
+        dystans = gps.minDystans(getMojaPozycja());
         System.out.println("W trasie do " + zrodlo + " spale " + ileSpale(dystans) + " l paliwa");
         setCzyJechacField(czyDojade(dystans));
 
@@ -168,29 +172,26 @@ public class Pojazd extends Thread {
         funkcjaJazdy(mojaTrasa);
 
 
-        setMojaPozycja(gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()));
         gps = new Nawigacja(getMojaPozycja(), listy, dodajVertex());
+        setMojaPozycja(gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()));
         cel = gps.znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa());
         mojaTrasa = gps.wyliczDroge(gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()), cel);
         dystans = gps.minDystans(cel);
-        System.out.println("W trasie do " + cel + " spale " + ileSpale(dystans));
+        System.out.println("W trasie do " + cel + " spale " + ileSpale(dystans) + " l paliwa");
         setCzyJechacField(czyDojade(dystans));
-        gps.znajdzStacje();
         if (sprawdzCzyWyjsc()) return;
         czekajCzas(100);
         System.out.println("Ruszam, jestem w punkcie " + mojaPozycja);
-        setMojaPozycja(gps.znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa()));
+
         funkcjaJazdy(mojaTrasa);
+        setMojaPozycja(gps.znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa()));
 
         this.jade = true;
         System.out.println("Zlecenie wykonane");
     }
 
     private Vertex dodajVertex() {
-        Vertex pozycja = getMojaPozycja();
-        if (pozycja.x == baza.getX() && pozycja.y == baza.getY())
-            return pozycja;
-        else return null;
+        return getMojaPozycja();
 
     }
 
@@ -274,7 +275,18 @@ public class Pojazd extends Thread {
     }
 
     private double ileSpale(double dystans) {
-        return Math.round((getSpalanie() / 100 * dystans) * 100.00) / 100.00;
+
+        double toReturn = getSpalanie() / 100 * dystans;
+
+        return round(toReturn, 2);
+    }
+
+    public double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     private boolean czyDojade(double dystans) {
