@@ -102,9 +102,15 @@ public class Nawigacja {
     }
 
     public List<Vertex> wyliczDroge(Vertex skad, Vertex dokad) {
-        computePaths(skad);
-        minDystans(dokad);
-        return getShortestPathTo(dokad);
+        if (!skad.equals(dokad)) {
+            computePaths(skad);
+            minDystans(dokad);
+            return getShortestPathTo(dokad);
+        } else {
+            computePaths(skad);
+            minDystans(skad);
+            return getShortestPathTo(skad);
+        }
     }
 
     public double minDystans(Vertex dokad) {

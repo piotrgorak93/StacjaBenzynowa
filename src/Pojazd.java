@@ -1,7 +1,5 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.NumberFormat;
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 /**
@@ -151,18 +149,19 @@ public class Pojazd extends Thread {
         Nawigacja gps;
         List<Vertex> mojaTrasa;
 
-        int xZrodlo = getMojeZlecenie().getxZrodlo();
-        int yZrodlo = getMojeZlecenie().getyZrodlo();
-        int xCel = getMojeZlecenie().getxCel();
-        int yCel = getMojeZlecenie().getyCel();
-
-        System.out.println("Moje zlecenie: " + mojeZlecenie);
-        System.out.println(this.getTruckName() + " wykonuje zlecenie " + getMojeZlecenie().getZrodlo().getNazwa() + " (" + xZrodlo + "," + yZrodlo + ") " +
-                "do " + getMojeZlecenie().getCel().getNazwa() + " (" + xCel + "," + yCel + "), nr zlecenia " + getMojeZlecenie().getNumerOgloszenia());
+        System.out.println("Moje zlecenie: " + getMojeZlecenie());
+        System.out.println(getTruckName() + " wykonuje zlecenie " + getMojeZlecenie());
         gps = new Nawigacja(getMojaPozycja(), listy, dodajVertex());
+        System.out.println("ZLECENIE: " + getMojeZlecenie());
         zrodlo = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
+        System.out.println("ZLECENIE przed wyliczaniem: " + getMojeZlecenie());
+        System.out.println("MOJA POZYCJA1: " + getMojaPozycja());
+        System.out.println(zrodlo);
         mojaTrasa = gps.wyliczDroge(getMojaPozycja(), zrodlo);
+        System.out.println("MOJA TRASA1 " + mojaTrasa);
+        System.out.println("MOJA POZYCJA2: " + getMojaPozycja());
         dystans = gps.minDystans(getMojaPozycja());
+        System.out.println("MOJA POZYCJA3: " + getMojaPozycja());
         System.out.println("W trasie do " + zrodlo + " spale " + ileSpale(dystans) + " l paliwa");
         setCzyJechacField(czyDojade(dystans));
 
@@ -174,8 +173,12 @@ public class Pojazd extends Thread {
 
         gps = new Nawigacja(getMojaPozycja(), listy, dodajVertex());
         setMojaPozycja(gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()));
+        System.out.println("ZLECENIE: " + getMojeZlecenie());
         cel = gps.znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa());
-        mojaTrasa = gps.wyliczDroge(gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()), cel);
+        zrodlo = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
+        System.out.println("ZLECENIE przed wyliczaniem: " + getMojeZlecenie());
+
+        mojaTrasa = gps.wyliczDroge(zrodlo, cel);
         dystans = gps.minDystans(cel);
         System.out.println("W trasie do " + cel + " spale " + ileSpale(dystans) + " l paliwa");
         setCzyJechacField(czyDojade(dystans));
@@ -225,7 +228,7 @@ public class Pojazd extends Thread {
     public void setPozycjaX(int pozycjaX) {
         this.pozycjaX = pozycjaX;
         spalajPaliwo();
-        System.out.println(this.getTruckName() + " ustawiłem pozycje na (" + this.pozycjaX + "," + getPozycjaY() + ")");
+        System.out.println(getTruckName() + " ustawiłem pozycje na (" + this.pozycjaX + "," + getPozycjaY() + ")");
     }
 
     public int getPozycjaY() {
@@ -235,7 +238,7 @@ public class Pojazd extends Thread {
     public void setPozycjaY(int pozycjaY) {
         this.pozycjaY = pozycjaY;
         spalajPaliwo();
-        System.out.println(this.getTruckName() + " ustawiłem pozycje na (" + getPozycjaX() + "," + this.pozycjaY + ")");
+        System.out.println(getTruckName() + " ustawiłem pozycje na (" + getPozycjaX() + "," + this.pozycjaY + ")");
     }
 
     private void zmieniajPozycje(Vertex vertex) {
