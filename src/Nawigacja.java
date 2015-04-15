@@ -48,6 +48,7 @@ class Edge {
 
 public class Nawigacja {
     private Vertex mojaPozycja;
+    private Vertex vertexDoDodania;
     ArrayList<Vertex> listaVertex;
     Listy listaBudynkow;
     Collection<Vertex> col;
@@ -55,9 +56,11 @@ public class Nawigacja {
     ArrayList<Edge> tempArr = new ArrayList<Edge>();
     Vertex to;
 
-    public Nawigacja(Vertex mojaPozycja, Listy listy) {
+    public Nawigacja(Vertex mojaPozycja, Listy listy, Vertex vertexDoDodania) {
+        this.vertexDoDodania = vertexDoDodania;
         this.mojaPozycja = mojaPozycja;
         this.listaBudynkow = listy;
+
         listaVertex = new ArrayList<>(Arrays.asList(new Vertex("A", 0, 0),
                 new Vertex("B", 0, 21), new Vertex("C", 11, 21),
                 new Vertex("D", 0, 30), new Vertex("E", 21, 16), new Vertex("F", 21, 30),
@@ -69,7 +72,7 @@ public class Nawigacja {
             dodajDoListyLokalnychVertex(new Vertex(listy.getListaBudynkow().get(i).getNazwa(),
                     listy.getListaBudynkow().get(i).getX(), listy.getListaBudynkow().get(i).getY()));
         }
-        dodajDoListyLokalnychVertex(this.mojaPozycja);
+        dodajDoListyLokalnychVertex(vertexDoDodania);
         Multimap<Vertex, Vertex> mapa = HashMultimap.create();
         pionowo(listaVertex, mapa);
         poziomo(listaVertex, mapa);
@@ -179,7 +182,8 @@ public class Nawigacja {
     }
 
     public void dodajDoListyLokalnychVertex(Vertex param) {
-        this.listaVertex.add(this.listaVertex.size(), param);
+        if (param != null)
+            this.listaVertex.add(this.listaVertex.size(), param);
     }
 
     public Vertex znajdzVertexPoNazwie(String nazwa) {
@@ -187,6 +191,16 @@ public class Nawigacja {
             if (vertex.name.equals(nazwa))
                 return vertex;
         }
+        return null;
+    }
+
+    public List<Vertex> znajdzStacje() {
+        System.out.println("Stacje paliw na mapie:");
+        for (Stacja stacja : listaBudynkow.getListaStacji()) {
+            System.out.println(stacja);
+        }
+
+
         return null;
     }
 }

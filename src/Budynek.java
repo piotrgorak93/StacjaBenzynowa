@@ -29,7 +29,7 @@ public class Budynek {
         Object[] tablicaXY = new Randomizer().losujPrzyDrodze();
         setX((Integer) tablicaXY[0]);
         setY((Integer) tablicaXY[1]);
-        System.out.println("Przy drodze " + tablicaXY[2] + " utworzono budynek " + nazwa);
+        System.out.println("Przy drodze " + tablicaXY[2] + " utworzono budynek " + nazwa + " w pozycji (" + getX() + "," + getY() + ")");
         listy.getListaBudynkow().add(listy.getListaBudynkow().size(), this);
     }
 
