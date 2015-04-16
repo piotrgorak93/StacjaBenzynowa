@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
@@ -12,13 +15,21 @@ public class Kontroler {
         if (!budynek.getClass().getCanonicalName().equalsIgnoreCase("Magazyn"))
             new Thread((Runnable) budynek).start();
 
-
+        listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(budynek.getNazwa(),budynek.getX(), budynek.getY()));
     }
 
 
     public static void main(String[] args) {
         Listy listy = new Listy();
+        listy.setListaCustomVertex(new ArrayList<>(Arrays.asList(new Vertex("A", 0, 0),
+                new Vertex("B", 0, 21), new Vertex("C", 11, 21),
+                new Vertex("D", 0, 30), new Vertex("E", 21, 16), new Vertex("F", 21, 30),
+                new Vertex("G", 16, 7), new Vertex("H", 11, 7), new Vertex("I", 16, 0),
+                new Vertex("J", 21, 7), new Vertex("K", 27, 16), new Vertex("L", 27, 0)
+
+        )));
         Baza baza = new Baza("Baza firmy", listy);
+        listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(baza.getNazwa(),baza.getX(), baza.getY()));
         utworzPojazd(listy, "Mercedes", baza);
 //        utworzPojazd(listy, "MAN", baza);
         utworzBudynek(new Magazyn("ASD", listy), listy);

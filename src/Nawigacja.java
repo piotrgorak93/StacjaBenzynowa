@@ -60,19 +60,13 @@ public class Nawigacja {
         this.vertexDoDodania = vertexDoDodania;
         this.mojaPozycja = mojaPozycja;
         this.listaBudynkow = listy;
-
-        listaVertex = new ArrayList<>(Arrays.asList(new Vertex("A", 0, 0),
-                new Vertex("B", 0, 21), new Vertex("C", 11, 21),
-                new Vertex("D", 0, 30), new Vertex("E", 21, 16), new Vertex("F", 21, 30),
-                new Vertex("G", 16, 7), new Vertex("H", 11, 7), new Vertex("I", 16, 0),
-                new Vertex("J", 21, 7), new Vertex("K", 27, 16), new Vertex("L", 27, 0)
-
-        ));
-        for (int i = 0; i < listy.getListaBudynkow().size(); i++) {
-            dodajDoListyLokalnychVertex(new Vertex(listy.getListaBudynkow().get(i).getNazwa(),
-                    listy.getListaBudynkow().get(i).getX(), listy.getListaBudynkow().get(i).getY()));
-        }
-        dodajDoListyLokalnychVertex(this.vertexDoDodania);
+        listaVertex = listy.getListaCustomVertex();
+//
+//        for (int i = 0; i < listy.getListaBudynkow().size(); i++) {
+//            dodajDoListyLokalnychVertex(new Vertex(listy.getListaBudynkow().get(i).getNazwa(),
+//                    listy.getListaBudynkow().get(i).getX(), listy.getListaBudynkow().get(i).getY()));
+//        }
+     //   dodajDoListyLokalnychVertex(this.vertexDoDodania);
         Multimap<Vertex, Vertex> mapa = HashMultimap.create();
         pionowo(listaVertex, mapa);
         poziomo(listaVertex, mapa);
@@ -89,11 +83,11 @@ public class Nawigacja {
                     //  tempArr.add(tempArr.size(), new Edge(this.mojaPozycja, Math.abs(listaVertex.get(i).x - this.mojaPozycja.x)));
                 }
             }
-            if (listaVertex.get(i).x == this.mojaPozycja.x) {
-                tempArr.add(tempArr.size(), new Edge(this.mojaPozycja, Math.abs(listaVertex.get(i).y - this.mojaPozycja.y)));
-            } else if (listaVertex.get(i).y == this.mojaPozycja.y) {
-                tempArr.add(tempArr.size(), new Edge(this.mojaPozycja, Math.abs(listaVertex.get(i).x - this.mojaPozycja.x)));
-            }
+//            if (listaVertex.get(i).x == this.mojaPozycja.x) {
+//                tempArr.add(tempArr.size(), new Edge(this.mojaPozycja, Math.abs(listaVertex.get(i).y - this.mojaPozycja.y)));
+//            } else if (listaVertex.get(i).y == this.mojaPozycja.y) {
+//                tempArr.add(tempArr.size(), new Edge(this.mojaPozycja, Math.abs(listaVertex.get(i).x - this.mojaPozycja.x)));
+//            }
             temp = tempArr.toArray(new Edge[tempArr.size()]);
             listaVertex.get(i).adjacencies = temp;
             tempArr.clear();
