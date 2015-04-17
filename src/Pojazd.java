@@ -19,9 +19,7 @@ public class Pojazd extends Thread {
     public Listy listy;
     private int pozycjaX;
     private int pozycjaY;
-    public boolean czyWyjechalZBazy = false;
-    public Vertex poprzednieMiejsce;
-    final ArrayList<Vertex> backupListyVertex;
+    final List<Vertex> backupListyVertex;
 
 
     public Pojazd(Listy listy, String truckName, Baza baza) {
@@ -35,6 +33,7 @@ public class Pojazd extends Thread {
         this.pozycjaY = this.baza.pozycjaY();
         System.out.println(this);
         backupListyVertex = listy.getListaCustomVertex();
+        setMojaPozycja(new VertexFinder().znajdzVertexPoNazwie("Baza firmy", backupListyVertex));
     }
 
     public Ogloszenie getMojeZlecenie() {
@@ -43,11 +42,6 @@ public class Pojazd extends Thread {
 
     public void setMojeZlecenie(Ogloszenie mojeZlecenie) {
         this.mojeZlecenie = mojeZlecenie;
-    }
-
-
-    public Listy getListy() {
-        return this.listy;
     }
 
     public int getPojemnoscBaku() {
@@ -82,18 +76,15 @@ public class Pojazd extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+
+        while (czyJechac()) {
             while (czyWolny()) {
                 czekajCzasWMilisekundach(2000);
                 jestemZajety();
             }
         }
+        Thread.currentThread().interrupt();
     }
-
-    public void setListy(Listy listy) {
-        this.listy = listy;
-    }
-
 
     public boolean czyWolny() {
         return !this.jade;
@@ -102,23 +93,19 @@ public class Pojazd extends Thread {
 
     public void jestemZajety() {
         List<Vertex> localList = this.backupListyVertex;
-        if (isCzyJechacField())
-            listy.wezZlecenie(this);
-        else return;
+
+        listy.wezZlecenie(this);
         Vertex zrodlo = new VertexFinder().znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa(), localList);
         Vertex cel = new VertexFinder().znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa(), localList);
+
         while (czyJechac()) {
-            if (!czyWyjechalZBazy)
-                jedz(this, new VertexFinder().znajdzVertexPoNazwie("Baza firmy", localList), zrodlo);
-            else {
-
-                jedz(this, getMojaPozycja(), zrodlo);
-            }
-            localList = this.backupListyVertex;
-
+            Kontroler.zerujVertexy(listy);
+            jedz(this, getMojaPozycja(), zrodlo);
+            Kontroler.zerujVertexy(listy);
             jedz(this, getMojaPozycja(), cel);
             jestemWolny();
         }
+        System.out.println("Zlecenie wykonane");
 
 
     }
@@ -132,7 +119,6 @@ public class Pojazd extends Thread {
     }
 
     public void jestemWolny() {
-
         setMojeZlecenie(null);
         this.jade = false;
     }
@@ -145,10 +131,6 @@ public class Pojazd extends Thread {
         this.spalanie = spalanie;
     }
 
-    public void wrocDoBazy() {
-
-    }
-
     public Vertex getMojaPozycja() {
         return mojaPozycja;
     }
@@ -157,15 +139,10 @@ public class Pojazd extends Thread {
         this.mojaPozycja = mojaPozycja;
     }
 
-
-    private Vertex dodajVertex() {
-        return getMojaPozycja();
-
-    }
-
     public boolean sprawdzCzyWyjsc() {
         if (!czyJechac()) {
             System.out.println(getTruckName() + ": znikam!");
+            this.czyJechacField = false;
             return true;
         }
         return false;
@@ -180,7 +157,7 @@ public class Pojazd extends Thread {
     }
 
     public void funkcjaJazdy(List<Vertex> trasa) {
-        System.out.println("Drukuje z pojazdu: " + trasa);
+        System.out.println("Drukuje trasę z pojazdu: " + trasa);
         for (int i = 1; i < trasa.size(); i++) {
             zmieniajPozycje(trasa.get(i));
         }
@@ -193,7 +170,7 @@ public class Pojazd extends Thread {
     public void setPozycjaX(int pozycjaX) {
         this.pozycjaX = pozycjaX;
         spalajPaliwo();
-        System.out.println(getTruckName() + " ustawiłem pozycje na (" + this.pozycjaX + "," + getPozycjaY() + ")");
+        System.out.println(getTruckName() + " ustawiłem pozycję na (" + this.pozycjaX + "," + getPozycjaY() + ")");
     }
 
     public int getPozycjaY() {
@@ -278,11 +255,9 @@ public class Pojazd extends Thread {
 
     public void jedz(Pojazd pojazd, Vertex skad, Vertex dokad) {
         List<Vertex> localList = pojazd.backupListyVertex;
-        Kontroler.zerujVertexy(listy);
         double dystans;
         pojazd.jade = true;
-        if (skad.name.contains("Baza"))
-            pojazd.czyWyjechalZBazy = true;
+
         Nawigacja gps = new Nawigacja(pojazd.getMojaPozycja(), localList);
         List<Vertex> mojaTrasa;
 
@@ -294,7 +269,10 @@ public class Pojazd extends Thread {
         System.out.println("Dystans do " + dokad + " to " + dystans);
         System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
         pojazd.setCzyJechacField(pojazd.czyDojade(dystans));
-        if (pojazd.sprawdzCzyWyjsc()) return;
+        if (pojazd.sprawdzCzyWyjsc()) {
+            setCzyJechacField(false);
+            return;
+        }
         pojazd.czekajCzasWMilisekundach(100);
         System.out.println("Ruszam, jestem w punkcie " + skad);
         pojazd.funkcjaJazdy(mojaTrasa);

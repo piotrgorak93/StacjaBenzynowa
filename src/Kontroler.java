@@ -21,6 +21,8 @@ public class Kontroler {
     public static void zerujVertexy(Listy listy) {
         for (Vertex vertex : listy.getListaCustomVertex()) {
             vertex.previous = null;
+            vertex.adjacencies = null;
+            vertex.minDistance = Double.POSITIVE_INFINITY;
         }
 
     }

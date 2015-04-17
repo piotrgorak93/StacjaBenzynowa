@@ -11,7 +11,6 @@ public class Listy {
     private ArrayList<Fabryka> listaFabryk = new ArrayList<Fabryka>();
     private ArrayList<Magazyn> listaMagazynow = new ArrayList<Magazyn>();
     private ArrayList<Ogloszenie> listaOgloszen = new ArrayList<Ogloszenie>();
-    private ArrayList<String> listaZleceniobiorcow = new ArrayList<String>();
     private ArrayList<Budynek> listaBudynkow = new ArrayList<Budynek>();
     private ArrayList<Vertex> listaCustomVertex = new ArrayList<>();
 
@@ -39,11 +38,6 @@ public class Listy {
         return this.listaOgloszen;
     }
 
-
-    public ArrayList<String> getListaZleceniobiorcow() {
-        return listaZleceniobiorcow;
-    }
-
     public synchronized void usunPierwszyZListy() {
         listaOgloszen.remove(0);
     }
@@ -58,13 +52,12 @@ public class Listy {
     }
 
     public synchronized void wezZlecenie(Pojazd pojazd) {
-        while (czyNiePusta()) {
+        if (czyNiePusta()) {
             Ogloszenie zlecenie = getPierwszyZListy();
             System.out.println(pojazd.getTruckName() + " znalazł ogłoszenie: " + zlecenie);
             pojazd.setMojeZlecenie(zlecenie);
             usunPierwszyZListy();
             System.out.println(pojazd.getTruckName() + ": Przyjalem zlecenie " + zlecenie);
-
         }
     }
 
