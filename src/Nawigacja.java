@@ -56,10 +56,10 @@ public class Nawigacja {
     ArrayList<Edge> tempArr = new ArrayList<Edge>();
     Vertex to;
 
-    public Nawigacja(Vertex mojaPozycja, Listy listy) {
+    public Nawigacja(Vertex mojaPozycja, List<Vertex> lista) {
         this.mojaPozycja = mojaPozycja;
-        this.listaBudynkow = listy;
-        listaVertex = listy.getListaCustomVertex();
+        //this.listaBudynkow = listy;
+        listaVertex = (ArrayList<Vertex>) lista;
 //
 //        for (int i = 0; i < listy.getListaBudynkow().size(); i++) {
 //            dodajDoListyLokalnychVertex(new Vertex(listy.getListaBudynkow().get(i).getNazwa(),

@@ -15,9 +15,15 @@ public class Kontroler {
         if (!budynek.getClass().getCanonicalName().equalsIgnoreCase("Magazyn"))
             new Thread((Runnable) budynek).start();
 
-        listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(budynek.getNazwa(),budynek.getX(), budynek.getY()));
+        listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(budynek.getNazwa(), budynek.getX(), budynek.getY()));
     }
 
+    public static void zerujVertexy(Listy listy) {
+        for (Vertex vertex : listy.getListaCustomVertex()) {
+            vertex.previous = null;
+        }
+
+    }
 
     public static void main(String[] args) {
         Listy listy = new Listy();
@@ -29,7 +35,7 @@ public class Kontroler {
 
         )));
         Baza baza = new Baza("Baza firmy", listy);
-        listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(baza.getNazwa(),baza.getX(), baza.getY()));
+        listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(baza.getNazwa(), baza.getX(), baza.getY()));
         utworzPojazd(listy, "Mercedes", baza);
 //        utworzPojazd(listy, "MAN", baza);
         utworzBudynek(new Magazyn("ASD", listy), listy);

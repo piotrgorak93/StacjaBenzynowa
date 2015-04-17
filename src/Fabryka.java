@@ -27,7 +27,7 @@ public class Fabryka extends Budynek implements Runnable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(new Randomizer().losujZZakresu(5000, 1000));
+                Thread.sleep(new Randomizer().losujZZakresu(2000, 1000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
