@@ -1,5 +1,6 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,16 +10,18 @@ public class Pojazd extends Thread {
     private int pojemnoscBaku;
     private double iloscPaliwa;
     private String truckName;
-    private boolean jade = false;
+    public boolean jade = false;
     private float spalanie;
     private Vertex mojaPozycja;
     private boolean czyJechacField = true;
     private Ogloszenie mojeZlecenie;
     private Baza baza;
-    private Listy listy;
+    public Listy listy;
     private int pozycjaX;
     private int pozycjaY;
-    public static int iloscWywolan = 0;
+    public boolean czyWyjechalZBazy = false;
+    public Vertex poprzednieMiejsce;
+    private final ArrayList<Vertex> backupListyVertex;
 
 
     public Pojazd(Listy listy, String truckName, Baza baza) {
@@ -31,6 +34,7 @@ public class Pojazd extends Thread {
         this.pozycjaX = this.baza.pozycjaX();
         this.pozycjaY = this.baza.pozycjaY();
         System.out.println(this);
+        backupListyVertex = listy.getListaCustomVertex();
     }
 
     public Ogloszenie getMojeZlecenie() {
@@ -96,11 +100,16 @@ public class Pojazd extends Thread {
     }
 
     public void jestemZajety() {
+
         if (isCzyJechacField())
             listy.wezZlecenie(this);
         else return;
         while (czyJechac()) {
-            jedz();
+            if (!czyWyjechalZBazy)
+                new ObiektJazdy().jedz(this, new VertexFinder().znajdzVertexPoNazwie("Baza firmy", localList), new VertexFinder().znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa(), localList));
+            else
+                new ObiektJazdy().jedz(this, poprzednieMiejsce, new VertexFinder().znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa(), localList));
+            new ObiektJazdy().jedz(this, new VertexFinder().znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa(), localList), new VertexFinder().znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa(), localList));
             jestemWolny();
         }
 
@@ -141,68 +150,13 @@ public class Pojazd extends Thread {
         this.mojaPozycja = mojaPozycja;
     }
 
-    public void jedz() {
-        double dystans;
-        this.jade = true;
-        Vertex zrodlo;
-        Vertex cel;
-        Nawigacja gps;
-        List<Vertex> mojaTrasa;
-
-        {
-            if (iloscWywolan == 0)
-                this.mojaPozycja = getListy().getListaCustomVertex().get(12);
-            else this.mojaPozycja = getListy().getListaCustomVertex().get(0);
-            System.out.println("Moje zlecenie: " + getMojeZlecenie());
-            System.out.println(getTruckName() + " wykonuje zlecenie " + getMojeZlecenie());
-            gps = new Nawigacja(getMojaPozycja(), listy, dodajVertex());
-            System.out.println("ZLECENIE: " + getMojeZlecenie());
-            zrodlo = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
-            System.out.println(zrodlo);
-            mojaTrasa = gps.wyliczDroge(getMojaPozycja(), zrodlo);
-            System.out.println("MOJA TRASA1 " + mojaTrasa);
-            dystans = gps.minDystans(zrodlo);
-            System.out.println(dystans);
-            System.out.println("W trasie do " + zrodlo + " spale " + ileSpale(dystans) + " l paliwa");
-            setCzyJechacField(czyDojade(dystans));
-            if (sprawdzCzyWyjsc()) return;
-            czekajCzas(100);
-            System.out.println("Ruszam, jestem w punkcie " + mojaPozycja);
-            funkcjaJazdy(mojaTrasa);
-            iloscWywolan++;
-        }
-
-        {
-            gps = new Nawigacja(getMojaPozycja(), listy, dodajVertex());
-            setMojaPozycja(gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa()));
-            System.out.println("ZLECENIE: " + getMojeZlecenie());
-            cel = gps.znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa());
-            zrodlo = gps.znajdzVertexPoNazwie(getMojeZlecenie().getZrodlo().getNazwa());
-            System.out.println("ZLECENIE przed wyliczaniem: " + getMojeZlecenie());
-
-            mojaTrasa = gps.wyliczDroge(zrodlo, cel);
-            dystans = gps.minDystans(cel);
-            System.out.println(dystans);
-            System.out.println("W trasie do " + cel + " spale " + ileSpale(dystans) + " l paliwa");
-            setCzyJechacField(czyDojade(dystans));
-            if (sprawdzCzyWyjsc()) return;
-            czekajCzas(100);
-            System.out.println("Ruszam, jestem w punkcie " + mojaPozycja);
-
-            funkcjaJazdy(mojaTrasa);
-            setMojaPozycja(gps.znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa()));
-
-            this.jade = true;
-            System.out.println("Zlecenie wykonane");
-        }
-    }
 
     private Vertex dodajVertex() {
         return getMojaPozycja();
 
     }
 
-    private boolean sprawdzCzyWyjsc() {
+    public boolean sprawdzCzyWyjsc() {
         if (!czyJechac()) {
             System.out.println(getTruckName() + ": znikam!");
             return true;
@@ -210,7 +164,7 @@ public class Pojazd extends Thread {
         return false;
     }
 
-    private void czekajCzas(int czas) {
+    public void czekajCzasWMilisekundach(int czas) {
         try {
             Thread.sleep(czas);
         } catch (InterruptedException e) {
@@ -218,7 +172,7 @@ public class Pojazd extends Thread {
         }
     }
 
-    private void funkcjaJazdy(List<Vertex> trasa) {
+    public void funkcjaJazdy(List<Vertex> trasa) {
         System.out.println("Drukuje z pojazdu: " + trasa);
         for (int i = 1; i < trasa.size(); i++) {
             zmieniajPozycje(trasa.get(i));
@@ -281,7 +235,7 @@ public class Pojazd extends Thread {
         this.czyJechacField = czyJechacField;
     }
 
-    private double ileSpale(double dystans) {
+    public double ileSpale(double dystans) {
 
         double toReturn = getSpalanie() / 100 * dystans;
 
@@ -296,7 +250,7 @@ public class Pojazd extends Thread {
         return bd.doubleValue();
     }
 
-    private boolean czyDojade(double dystans) {
+    public boolean czyDojade(double dystans) {
         if (getIloscPaliwa() < ileSpale(dystans) || czyPusty()) {
             System.out.println("Za mało paliwa");
             return false;
@@ -311,6 +265,35 @@ public class Pojazd extends Thread {
     }
 
     private void jedzNaStacje() {
+
+    }
+}
+
+class ObiektJazdy {
+    public void jedz(Pojazd pojazd, Vertex skad, Vertex dokad) {
+        List<Vertex> localList = this.backupListyVertex;
+        double dystans;
+        pojazd.jade = true;
+        if (skad.name.contains("Baza"))
+            pojazd.czyWyjechalZBazy = true;
+        Nawigacja gps = new Nawigacja(pojazd.getMojaPozycja(), pojazd.listy);
+        List<Vertex> mojaTrasa;
+
+
+        System.out.println(pojazd.getTruckName() + " wykonuje zlecenie " + pojazd.getMojeZlecenie());
+        System.out.println("Jade z " + skad + " do " + dokad);
+        mojaTrasa = gps.wyliczDroge(skad, dokad);
+        System.out.println("MOJA TRASA1 " + mojaTrasa);
+        dystans = gps.minDystans(dokad);
+        System.out.println(dystans);
+        System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
+        pojazd.setCzyJechacField(pojazd.czyDojade(dystans));
+        if (pojazd.sprawdzCzyWyjsc()) return;
+        pojazd.czekajCzasWMilisekundach(100);
+        System.out.println("Ruszam, jestem w punkcie " + skad);
+        pojazd.funkcjaJazdy(mojaTrasa);
+        pojazd.setMojaPozycja(dokad);
+        pojazd.poprzednieMiejsce = dokad;
 
     }
 }

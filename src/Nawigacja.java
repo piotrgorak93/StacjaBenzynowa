@@ -56,8 +56,7 @@ public class Nawigacja {
     ArrayList<Edge> tempArr = new ArrayList<Edge>();
     Vertex to;
 
-    public Nawigacja(Vertex mojaPozycja, Listy listy, Vertex vertexDoDodania) {
-        this.vertexDoDodania = vertexDoDodania;
+    public Nawigacja(Vertex mojaPozycja, Listy listy) {
         this.mojaPozycja = mojaPozycja;
         this.listaBudynkow = listy;
         listaVertex = listy.getListaCustomVertex();
@@ -66,7 +65,7 @@ public class Nawigacja {
 //            dodajDoListyLokalnychVertex(new Vertex(listy.getListaBudynkow().get(i).getNazwa(),
 //                    listy.getListaBudynkow().get(i).getX(), listy.getListaBudynkow().get(i).getY()));
 //        }
-     //   dodajDoListyLokalnychVertex(this.vertexDoDodania);
+        //   dodajDoListyLokalnychVertex(this.vertexDoDodania);
         Multimap<Vertex, Vertex> mapa = HashMultimap.create();
         pionowo(listaVertex, mapa);
         poziomo(listaVertex, mapa);
@@ -96,24 +95,19 @@ public class Nawigacja {
     }
 
     public List<Vertex> wyliczDroge(Vertex skad, Vertex dokad) {
-        if (!skad.equals(dokad)) {
-            computePaths(skad);
-            minDystans(dokad);
-            return getShortestPathTo(dokad);
-        } else {
-            computePaths(skad);
-            minDystans(skad);
-            return getShortestPathTo(skad);
-        }
+        computePaths(skad);
+        minDystans(dokad);
+        return getShortestPathTo(dokad);
+
     }
 
     public double minDystans(Vertex dokad) {
         return dokad.minDistance;
     }
 
-    public static void computePaths(Vertex source) {
+    public void computePaths(Vertex source) {
         source.minDistance = 0.;
-        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
+        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<>();
         vertexQueue.add(source);
 
         while (!vertexQueue.isEmpty()) {
@@ -135,7 +129,7 @@ public class Nawigacja {
         }
     }
 
-    public static List<Vertex> getShortestPathTo(Vertex target) {
+    public List<Vertex> getShortestPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<Vertex>();
         for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
             path.add(vertex);
@@ -187,13 +181,6 @@ public class Nawigacja {
 
     }
 
-    public Vertex znajdzVertexPoNazwie(String nazwa) {
-        for (Vertex vertex : listaVertex) {
-            if (vertex.name.equals(nazwa))
-                return vertex;
-        }
-        return null;
-    }
 
     public List<Vertex> znajdzStacje() {
         System.out.println("Stacje paliw na mapie:");
@@ -204,8 +191,19 @@ public class Nawigacja {
 
         return null;
     }
+
 }
 
+
+class VertexFinder {
+    public Vertex znajdzVertexPoNazwie(String nazwa, List<Vertex> listaVertex) {
+        for (Vertex vertex : listaVertex) {
+            if (vertex.name.equals(nazwa))
+                return vertex;
+        }
+        return null;
+    }
+}
 
 
 
