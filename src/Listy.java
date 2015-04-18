@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,11 +14,30 @@ public class Listy {
     private ArrayList<Ogloszenie> listaOgloszen = new ArrayList<Ogloszenie>();
     private ArrayList<Budynek> listaBudynkow = new ArrayList<Budynek>();
     private ArrayList<Vertex> listaCustomVertex = new ArrayList<>();
+    private HashMap<Stacja, ArrayList<Pojazd>> hashMap = new HashMap<>();
+
+    public void dodajDoHashmapy() {
+        for (Stacja stacja : listaStacji) {
+            hashMap.put(stacja, stacja.listaPojazdowNaStacji);
+        }
+    }
+
+    public ArrayList<Pojazd> pobierzZHashmapy(Vertex dokad) {
+        Stacja szukana = znajdzStacjePoVertexie(dokad);
+        return hashMap.get(szukana);
+    }
 
     public ArrayList<Magazyn> getListaMagazynow() {
         return this.listaMagazynow;
     }
 
+    public Stacja znajdzStacjePoVertexie(Vertex szukaj) {
+        for (Stacja stacja : getListaStacji()) {
+            if (stacja.getNazwa().equals(szukaj.name))
+                return stacja;
+        }
+        return null;
+    }
 
     public ArrayList<Pojazd> getListaPojazdow() {
         return this.listaPojazdow;

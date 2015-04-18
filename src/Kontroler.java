@@ -38,13 +38,15 @@ public class Kontroler {
         )));
         Baza baza = new Baza("Baza firmy", listy);
         listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(baza.getNazwa(), baza.getX(), baza.getY()));
-        utworzPojazd(listy, "Mercedes", baza);
+
 //        utworzPojazd(listy, "MAN", baza);
         utworzBudynek(new Magazyn("ASD", listy), listy);
         utworzBudynek(new Fabryka("Tesco", listy), listy);
         utworzBudynek(new Stacja("Orlen", listy), listy);
         utworzBudynek(new Stacja("Shell", listy), listy);
         utworzBudynek(new Stacja("Lotos", listy), listy);
+        listy.dodajDoHashmapy();
+        utworzPojazd(listy, "Mercedes", baza);
 //        new Thread(new Fabryka(listy, "Tesco")).start();
 //        new Thread(new Fabryka(listy, "Castorama")).start();
         //  new Thread(new Magazyn("Magazyn Andrzeja",listy)).start();

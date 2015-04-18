@@ -1,5 +1,6 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ public class Pojazd extends Thread {
     final List<Vertex> backupListyVertex;
     private boolean czyWziacZlecenie = true;
     private boolean czyWyjsc = false;
+    private boolean czyBylemNaStacji = false;
 
     public Pojazd(Listy listy, String truckName, Baza baza) {
         this.baza = baza;
@@ -108,12 +110,10 @@ public class Pojazd extends Thread {
         Vertex cel = new VertexFinder().znajdzVertexPoNazwie(getMojeZlecenie().getCel().getNazwa(), localList);
 
         while (czyJechac()) {
-            Kontroler.zerujVertexy(listy);
             if (!czyJechacField) {
                 return;
             }
             jedz(this, getMojaPozycja(), zrodlo);
-            Kontroler.zerujVertexy(listy);
             if (!czyJechacField) {
                 return;
             }
@@ -231,6 +231,7 @@ public class Pojazd extends Thread {
 
     private void jedzNaStacje(Pojazd pojazd, Vertex skad) {
         List<Vertex> localList = pojazd.backupListyVertex;
+        Kontroler.zerujVertexy(listy);
         double dystans;
         jade = true;
         Nawigacja gps = new Nawigacja(pojazd.getMojaPozycja(), localList);
@@ -243,21 +244,19 @@ public class Pojazd extends Thread {
         if (pojazd.ileSpale(dystans) > getIloscPaliwa()) {
             System.out.println("Nie dojade do stacji, wychodze!");
             this.czyJechacField = false;
-            return;
+        } else {
+            ArrayList<Pojazd> localList2 = listy.pobierzZHashmapy(dokad);
+            localList2.add(localList2.size(), this);
+            this.czyBylemNaStacji = true;
         }
-
-        pojazd.czekajCzasWMilisekundach(100);
-        System.out.println("Ruszam, jestem w punkcie " + skad);
-        pojazd.funkcjaJazdy(mojaTrasa);
-        pojazd.setMojaPozycja(dokad);
     }
 
 
     public void jedz(Pojazd pojazd, Vertex skad, Vertex dokad) {
+        Kontroler.zerujVertexy(listy);
         List<Vertex> localList = pojazd.backupListyVertex;
         double dystans;
         pojazd.jade = true;
-
         Nawigacja gps = new Nawigacja(pojazd.getMojaPozycja(), localList);
         List<Vertex> mojaTrasa;
 
@@ -267,11 +266,26 @@ public class Pojazd extends Thread {
         dystans = gps.minDystans(dokad);
         System.out.println("Dystans do " + dokad + " to " + dystans);
         System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
+        if (czyJechacNaStacje())
+            jedzNaStacje(this, getMojaPozycja());
         if (!czyDojade(dystans)) return;
         pojazd.czekajCzasWMilisekundach(100);
         System.out.println("Ruszam, jestem w punkcie " + skad);
+        if (czyBylemNaStacji)
+            skad = getMojaPozycja();
+        mojaTrasa = gps.wyliczDroge(skad, dokad);
+        dystans = gps.minDystans(dokad);
+        System.out.println("Dystans do " + dokad + " to " + dystans);
+        System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
         pojazd.funkcjaJazdy(mojaTrasa);
         pojazd.setMojaPozycja(dokad);
+    }
+
+    private boolean czyJechacNaStacje() {
+        if (getIloscPaliwa() < 10) {
+            System.out.println("Rezerwa się świeci, jade na stacje");
+            return true;
+        } else return false;
     }
 
     private boolean czyDojade(Double dystans) {
@@ -291,6 +305,6 @@ public class Pojazd extends Thread {
 
     public void tankuj() {
         setIloscPaliwa(pojemnoscBaku);
-        System.out.println(getTruckName() + "Bak napełniony");
+        System.out.println(getTruckName() + " bak napełniony");
     }
 }
