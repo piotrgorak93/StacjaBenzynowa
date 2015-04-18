@@ -65,17 +65,6 @@ public class Listy {
         return !getListaOgloszen().isEmpty();
     }
 
-    public synchronized void akcja(Pojazd pojazd) {
-        pojazd.jestemZajety();
-        Ogloszenie zlecenie = pojazd.getMojeZlecenie();
-        // System.out.println(pojazd.getMojeZlecenie());
-        try {
-
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     public Magazyn losujMagazyn() {
         int liczbaMagazynow = getListaMagazynow().size();
@@ -88,16 +77,6 @@ public class Listy {
 
     public ArrayList<Budynek> getListaBudynkow() {
         return listaBudynkow;
-    }
-
-    public void setListaBudynkow(ArrayList<Budynek> listaBudynkow) {
-        this.listaBudynkow = listaBudynkow;
-    }
-
-    public void pobierzBudynki() {
-        getListaBudynkow().addAll(getListaFabryk());
-        getListaBudynkow().addAll(getListaMagazynow());
-        getListaBudynkow().addAll(getListaStacji());
     }
 
     public ArrayList<Vertex> getListaCustomVertex() {

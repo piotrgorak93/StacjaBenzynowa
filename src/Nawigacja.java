@@ -182,14 +182,20 @@ public class Nawigacja {
     }
 
 
-    public List<Vertex> znajdzStacje() {
+    public Vertex znajdzStacje(Listy list) {
         System.out.println("Stacje paliw na mapie:");
-        for (Stacja stacja : listaBudynkow.getListaStacji()) {
+        computePaths(mojaPozycja);
+        HashMap<Double, Vertex> lista = new HashMap<>();
+        for (Stacja stacja : list.getListaStacji()) {
             System.out.println(stacja);
+            Vertex localStacja = new VertexFinder().znajdzVertexPoNazwie(stacja.getNazwa(), listaVertex);
+            lista.put(minDystans(localStacja), localStacja);
         }
+        Double min = Collections.min(lista.keySet());
 
 
-        return null;
+        System.out.println("Najblizej jest: " + lista.get(min));
+        return lista.get(min);
     }
 
 }
@@ -206,7 +212,3 @@ class VertexFinder {
         return null;
     }
 }
-
-
-
-
