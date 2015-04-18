@@ -7,7 +7,7 @@ import java.util.List;
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
 public class Pojazd extends Thread {
-    private int pojemnoscBaku;
+    private double pojemnoscBaku;
     private double iloscPaliwa;
     private String truckName;
     public boolean jade = false;
@@ -47,7 +47,7 @@ public class Pojazd extends Thread {
         this.mojeZlecenie = mojeZlecenie;
     }
 
-    public int getPojemnoscBaku() {
+    public double getPojemnoscBaku() {
         return pojemnoscBaku;
     }
 
@@ -79,7 +79,7 @@ public class Pojazd extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (czyJechacField) {
             while (czyWolny()) {
                 czekajCzasWMilisekundach(2000);
                 jestemZajety();
@@ -87,8 +87,8 @@ public class Pojazd extends Thread {
                     break;
             }
         }
-//        System.out.println("Zabijam watek" + currentThread().getName());
-//        Thread.currentThread().interrupt();
+        System.out.println("Zabijam watek" + currentThread().getName());
+        Thread.currentThread().interrupt();
     }
 
     private boolean czyDzialac() {
@@ -119,6 +119,9 @@ public class Pojazd extends Thread {
             }
             jedz(this, getMojaPozycja(), cel);
             jestemWolny();
+            if (!czyJechacField) {
+                return;
+            }
         }
     }
 
@@ -268,11 +271,11 @@ public class Pojazd extends Thread {
         System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
         if (czyJechacNaStacje())
             jedzNaStacje(this, getMojaPozycja());
+        if (!czyJechacField) return;
         if (!czyDojade(dystans)) return;
         pojazd.czekajCzasWMilisekundach(100);
         System.out.println("Ruszam, jestem w punkcie " + skad);
-        if (czyBylemNaStacji)
-            skad = getMojaPozycja();
+        skad = getMojaPozycja();
         mojaTrasa = gps.wyliczDroge(skad, dokad);
         dystans = gps.minDystans(dokad);
         System.out.println("Dystans do " + dokad + " to " + dystans);
@@ -282,7 +285,10 @@ public class Pojazd extends Thread {
     }
 
     private boolean czyJechacNaStacje() {
-        if (getIloscPaliwa() < 10) {
+        double localPojemnosc = getPojemnoscBaku();
+        localPojemnosc = localPojemnosc * 50 / 100;
+        System.out.println("LOKAL " + localPojemnosc);
+        if (getIloscPaliwa() < localPojemnosc) {
             System.out.println("Rezerwa się świeci, jade na stacje");
             return true;
         } else return false;
@@ -305,6 +311,6 @@ public class Pojazd extends Thread {
 
     public void tankuj() {
         setIloscPaliwa(pojemnoscBaku);
-        System.out.println(getTruckName() + " bak napełniony");
+        System.out.println(getTruckName() + " bak napełniony: " + getIloscPaliwa()+" l");
     }
 }
