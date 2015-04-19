@@ -12,10 +12,10 @@ public class Magazyn extends Budynek implements Runnable {
         return y;
     }
 
-    private int x;
-    private int y;
-    private String nazwa;
-    private Listy listy;
+    private final int x;
+    private final int y;
+    private final String nazwa;
+    private final Listy listy;
 
     public Magazyn(String nazwa, Listy listy) {
         super(nazwa, listy);

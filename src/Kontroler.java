@@ -46,7 +46,7 @@ public class Kontroler {
         utworzBudynek(new Stacja("Orlen", listy), listy);
         utworzBudynek(new Stacja("Shell", listy), listy);
         utworzBudynek(new Stacja("Lotos", listy), listy);
-        listy.dodajDoHashmapy();
+       // listy.dodajDoHashmapy();
         utworzPojazd(listy, "Mercedes", baza);
 //        new Thread(new Fabryka(listy, "Tesco")).start();
 //        new Thread(new Fabryka(listy, "Castorama")).start();

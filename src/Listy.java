@@ -7,14 +7,14 @@ import java.util.concurrent.TimeUnit;
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
 public class Listy {
-    private ArrayList<Pojazd> listaPojazdow = new ArrayList<Pojazd>();
-    private ArrayList<Stacja> listaStacji = new ArrayList<Stacja>();
-    private ArrayList<Fabryka> listaFabryk = new ArrayList<Fabryka>();
-    private ArrayList<Magazyn> listaMagazynow = new ArrayList<Magazyn>();
-    private ArrayList<Ogloszenie> listaOgloszen = new ArrayList<Ogloszenie>();
-    private ArrayList<Budynek> listaBudynkow = new ArrayList<Budynek>();
+    private final ArrayList<Pojazd> listaPojazdow = new ArrayList<Pojazd>();
+    private final ArrayList<Stacja> listaStacji = new ArrayList<Stacja>();
+    private final ArrayList<Fabryka> listaFabryk = new ArrayList<Fabryka>();
+    private final ArrayList<Magazyn> listaMagazynow = new ArrayList<Magazyn>();
+    private final ArrayList<Ogloszenie> listaOgloszen = new ArrayList<Ogloszenie>();
+    private final ArrayList<Budynek> listaBudynkow = new ArrayList<Budynek>();
     private ArrayList<Vertex> listaCustomVertex = new ArrayList<>();
-    private HashMap<Stacja, ArrayList<Pojazd>> hashMap = new HashMap<>();
+    private final HashMap<Stacja, ArrayList<Pojazd>> hashMap = new HashMap<>();
 
     public void dodajDoHashmapy() {
         for (Stacja stacja : listaStacji) {
@@ -22,20 +22,8 @@ public class Listy {
         }
     }
 
-    public HashMap<Stacja, ArrayList<Pojazd>> pobierzHashmape() {
-        return hashMap;
-    }
-
     public ArrayList<Magazyn> getListaMagazynow() {
         return this.listaMagazynow;
-    }
-
-    public Stacja znajdzStacjePoVertexie(Vertex szukaj) {
-        for (Stacja stacja : getListaStacji()) {
-            if (stacja.getNazwa().equals(szukaj.name))
-                return stacja;
-        }
-        return null;
     }
 
     public ArrayList<Pojazd> getListaPojazdow() {
@@ -57,11 +45,11 @@ public class Listy {
         return this.listaOgloszen;
     }
 
-    public synchronized void usunPierwszyZListy() {
+    private synchronized void usunPierwszyZListy() {
         listaOgloszen.remove(0);
     }
 
-    public Ogloszenie getPierwszyZListy() {
+    private Ogloszenie getPierwszyZListy() {
         return getListaOgloszen().get(0);
     }
 
@@ -80,7 +68,7 @@ public class Listy {
         }
     }
 
-    public boolean czyNiePusta() {
+    private boolean czyNiePusta() {
         return !getListaOgloszen().isEmpty();
     }
 

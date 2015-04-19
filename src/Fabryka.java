@@ -2,9 +2,9 @@
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
 public class Fabryka extends Budynek implements Runnable {
-    private int x;
-    private int y;
-    private Listy listy;
+    private final int x;
+    private final int y;
+    private final Listy listy;
     private String nazwa;
 
     public Fabryka(String nazwa, Listy listy) {
@@ -17,7 +17,7 @@ public class Fabryka extends Budynek implements Runnable {
         listy.getListaFabryk().add(listy.getListaFabryk().size(), this);
     }
 
-    public synchronized void wystawOgloszenie() {
+    private synchronized void wystawOgloszenie() {
         listy.dodajDoListy(new Ogloszenie(this, listy.losujMagazyn()));
         System.out.println("Potrzebuje transportu " + listy.getListaOgloszen().get(listy.getListaOgloszen().size() - 1));
 

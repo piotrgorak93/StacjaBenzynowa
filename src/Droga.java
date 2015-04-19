@@ -1,12 +1,12 @@
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-27.
  */
-public class Droga {
+class Droga {
     private final int xStart;
     private final int yStart;
     private final int xEnd;
     private final int yEnd;
-    private String nazwa;
+    private final String nazwa;
 
 
     public Droga(String nazwa, int xStart, int yStart, int xEnd, int yEnd) {

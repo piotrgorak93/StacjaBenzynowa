@@ -5,15 +5,15 @@ import java.util.Random;
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
-public class Randomizer {
-    private ArrayList<Droga> pasujaceX = new ArrayList<Droga>();
-    private ArrayList<Droga> pasujaceY = new ArrayList<Droga>();
-    private ArrayList<Object> wylosowane = new ArrayList<Object>();
-    private Object tab = new Object();
+class Randomizer {
+    private final ArrayList<Droga> pasujaceX = new ArrayList<Droga>();
+    private final ArrayList<Droga> pasujaceY = new ArrayList<Droga>();
+    private final ArrayList<Object> wylosowane = new ArrayList<Object>();
+    private final Object tab = new Object();
     private ArrayList<Budynek> listaBudynkow;
-    Object tableToReturn[] = new Object[3];
+    private final Object[] tableToReturn = new Object[3];
     private boolean przyDrodze = false;
-    final Droga tablicaDrog[] = {new Droga("A-B", 0, 0, 0, 21), new Droga("B-D", 0, 21, 0, 30), new Droga("D-F", 0, 30, 21, 30), new Droga("B-C", 0, 21, 11, 21),
+    private final Droga[] tablicaDrog = {new Droga("A-B", 0, 0, 0, 21), new Droga("B-D", 0, 21, 0, 30), new Droga("D-F", 0, 30, 21, 30), new Droga("B-C", 0, 21, 11, 21),
             new Droga("H-C", 11, 7, 11, 21), new Droga("H-G", 11, 7, 16, 7), new Droga("G-J", 16, 7, 21, 7), new Droga("I-G", 16, 0, 16, 7),
             new Droga("I-L", 16, 0, 27, 0), new Droga("L-K", 27, 0, 27, 16), new Droga("E-F", 21, 16, 21, 30), new Droga("A-I", 0, 0, 16, 0),
             new Droga("E-K", 21, 16, 27, 16), new Droga("J-E", 21, 7, 21, 16)
@@ -30,12 +30,12 @@ public class Randomizer {
         return r.nextInt(max - min + 1) + min;
     }
 
-    public int losujX() {
+    private int losujX() {
         Random r = new Random();
         return r.nextInt(27);
     }
 
-    public int losujY() {
+    private int losujY() {
         Random r = new Random();
         return r.nextInt(30);
     }

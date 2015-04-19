@@ -1,29 +1,29 @@
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-30.
  */
-public class Budynek {
-    protected int x;
-    protected int y;
-    protected String nazwa;
-    protected Listy listy;
+class Budynek {
+    int x;
+    int y;
+    private String nazwa;
+    private Listy listy;
 
     public String getNazwa() {
         return nazwa;
     }
 
-    public void setNazwa(String nazwa) {
+    void setNazwa(String nazwa) {
         this.nazwa = nazwa;
     }
 
-    public Listy getListy() {
+    Listy getListy() {
         return listy;
     }
 
-    public void setListy(Listy listy) {
+    private void setListy(Listy listy) {
         this.listy = listy;
     }
 
-    public Budynek(String nazwa, Listy listy) {
+    Budynek(String nazwa, Listy listy) {
         setListy(listy);
         setNazwa(nazwa);
         Object[] tablicaXY = new Randomizer().losujPrzyDrodze(getListy());
@@ -46,11 +46,11 @@ public class Budynek {
         return y;
     }
 
-    public void setX(int x) {
+    private void setX(int x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    private void setY(int y) {
         this.y = y;
     }
 

@@ -22,7 +22,7 @@ class Vertex implements Comparable<Vertex> {
         getAdjacencies();
     }
 
-    public Edge[] getAdjacencies() {
+    private Edge[] getAdjacencies() {
         return this.adjacencies;
     }
 
@@ -46,14 +46,13 @@ class Edge {
     }
 }
 
-public class Nawigacja {
+class Nawigacja {
     private Vertex mojaPozycja;
-    private Vertex vertexDoDodania;
-    ArrayList<Vertex> listaVertex;
+    private ArrayList<Vertex> listaVertex;
     Listy listaBudynkow;
-    Collection<Vertex> col;
-    Edge[] temp;
-    ArrayList<Edge> tempArr = new ArrayList<Edge>();
+    private Collection<Vertex> col;
+    private Edge[] temp;
+    private ArrayList<Edge> tempArr = new ArrayList<Edge>();
     Vertex to;
 
     public Nawigacja(Vertex mojaPozycja, List<Vertex> lista) {
@@ -105,7 +104,7 @@ public class Nawigacja {
         return dokad.minDistance;
     }
 
-    public void computePaths(Vertex source) {
+    private void computePaths(Vertex source) {
         source.minDistance = 0.;
         PriorityQueue<Vertex> vertexQueue = new PriorityQueue<>();
         vertexQueue.add(source);
@@ -129,7 +128,7 @@ public class Nawigacja {
         }
     }
 
-    public List<Vertex> getShortestPathTo(Vertex target) {
+    private List<Vertex> getShortestPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<Vertex>();
         for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
             path.add(vertex);

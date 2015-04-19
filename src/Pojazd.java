@@ -5,22 +5,22 @@ import java.util.List;
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
-public class Pojazd extends Thread {
+class Pojazd extends Thread {
     private double pojemnoscBaku;
     private double iloscPaliwa;
     private String truckName;
-    public boolean jade = false;
+    private boolean jade = false;
     private float spalanie;
     private Vertex mojaPozycja;
     private boolean czyJechacField = true;
     private Ogloszenie mojeZlecenie;
-    private Baza baza;
+    private final Baza baza;
     private boolean czyDzialac = true;
-    public Listy listy;
+    private final Listy listy;
     private int pozycjaX;
     private int pozycjaY;
-    final List<Vertex> backupListyVertex;
-    private boolean czyWziacZlecenie = true;
+    private final List<Vertex> backupListyVertex;
+    private final boolean czyWziacZlecenie = true;
     private boolean czyWyjsc = false;
     private boolean czyBylemNaStacji = false;
     public boolean blokada = false;
@@ -40,7 +40,7 @@ public class Pojazd extends Thread {
         setMojaPozycja(new VertexFinder().znajdzVertexPoNazwie("Baza firmy", backupListyVertex));
     }
 
-    public Ogloszenie getMojeZlecenie() {
+    private Ogloszenie getMojeZlecenie() {
         return mojeZlecenie;
     }
 
@@ -48,19 +48,19 @@ public class Pojazd extends Thread {
         this.mojeZlecenie = mojeZlecenie;
     }
 
-    public double getPojemnoscBaku() {
+    private double getPojemnoscBaku() {
         return pojemnoscBaku;
     }
 
-    public void setPojemnoscBaku(int pojemnoscBaku) {
+    private void setPojemnoscBaku(int pojemnoscBaku) {
         this.pojemnoscBaku = pojemnoscBaku;
     }
 
-    public double getIloscPaliwa() {
+    private double getIloscPaliwa() {
         return iloscPaliwa;
     }
 
-    public void setIloscPaliwa(double iloscPaliwa) {
+    private void setIloscPaliwa(double iloscPaliwa) {
         this.iloscPaliwa = iloscPaliwa;
     }
 
@@ -68,7 +68,7 @@ public class Pojazd extends Thread {
         return truckName;
     }
 
-    public void setTruckName(String name) {
+    private void setTruckName(String name) {
         this.truckName = name;
     }
 
@@ -92,12 +92,12 @@ public class Pojazd extends Thread {
         Thread.currentThread().interrupt();
     }
 
-    public boolean czyWolny() {
+    private boolean czyWolny() {
         return !this.jade;
 
     }
 
-    public void jestemZajety() {
+    private void jestemZajety() {
         List<Vertex> localList = this.backupListyVertex;
 
         if (isCzyWziacZlecenie())
@@ -126,25 +126,25 @@ public class Pojazd extends Thread {
         return getMojeZlecenie() != null;
     }
 
-    public void jestemWolny() {
+    private void jestemWolny() {
         System.out.println("Zlecenie wykonane");
         setMojeZlecenie(null);
         this.jade = false;
     }
 
-    public float getSpalanie() {
+    private float getSpalanie() {
         return spalanie;
     }
 
-    public void setSpalanie(int spalanie) {
+    private void setSpalanie(int spalanie) {
         this.spalanie = spalanie;
     }
 
-    public Vertex getMojaPozycja() {
+    private Vertex getMojaPozycja() {
         return mojaPozycja;
     }
 
-    public void setMojaPozycja(Vertex mojaPozycja) {
+    private void setMojaPozycja(Vertex mojaPozycja) {
         this.mojaPozycja = mojaPozycja;
     }
 
@@ -156,28 +156,28 @@ public class Pojazd extends Thread {
         }
     }
 
-    public void funkcjaJazdy(List<Vertex> trasa) {
+    private void funkcjaJazdy(List<Vertex> trasa) {
         System.out.println("Drukuje trasę z pojazdu: " + trasa);
         for (int i = 1; i < trasa.size(); i++) {
             zmieniajPozycje(trasa.get(i));
         }
     }
 
-    public int getPozycjaX() {
+    private int getPozycjaX() {
         return pozycjaX;
     }
 
-    public void setPozycjaX(int pozycjaX) {
+    private void setPozycjaX(int pozycjaX) {
         this.pozycjaX = pozycjaX;
         spalajPaliwo();
         System.out.println(getTruckName() + " ustawiłem pozycję na (" + this.pozycjaX + "," + getPozycjaY() + ")");
     }
 
-    public int getPozycjaY() {
+    private int getPozycjaY() {
         return pozycjaY;
     }
 
-    public void setPozycjaY(int pozycjaY) {
+    private void setPozycjaY(int pozycjaY) {
         this.pozycjaY = pozycjaY;
         spalajPaliwo();
         System.out.println(getTruckName() + " ustawiłem pozycje na (" + getPozycjaX() + "," + this.pozycjaY + ")");
@@ -207,15 +207,15 @@ public class Pojazd extends Thread {
         } while (!czySkonczyc);
         System.out.println(getTruckName() + ": jestem w punkcie " + vertex.name);
         if (getIloscPaliwa() >= 0)
-            System.out.println("Mam w baku " + round(getIloscPaliwa(), 2) + " l paliwa");
+            System.out.println(getTruckName() + " mam w baku " + round(getIloscPaliwa(), 2) + " l paliwa");
     }
 
-    public double ileSpale(double dystans) {
+    private double ileSpale(double dystans) {
         double toReturn = getSpalanie() / 100 * dystans;
         return round(toReturn, 2);
     }
 
-    public double round(double value, int places) {
+    private double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
@@ -282,7 +282,7 @@ public class Pojazd extends Thread {
     }
 
 
-    public void jedz(Pojazd pojazd, Vertex skad, Vertex dokad) {
+    private void jedz(Pojazd pojazd, Vertex skad, Vertex dokad) {
         Kontroler.zerujVertexy(listy);
         List<Vertex> localList = pojazd.backupListyVertex;
         double dystans;
@@ -341,7 +341,7 @@ public class Pojazd extends Thread {
         } else return false;
     }
 
-    public boolean isCzyWziacZlecenie() {
+    private boolean isCzyWziacZlecenie() {
         return czyWziacZlecenie;
     }
 

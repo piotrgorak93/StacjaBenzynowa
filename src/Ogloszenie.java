@@ -2,9 +2,9 @@
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-23.
  */
 public class Ogloszenie {
-    private Fabryka zrodlo;
-    private Magazyn cel;
-    private int numerOgloszenia;
+    private final Fabryka zrodlo;
+    private final Magazyn cel;
+    private final int numerOgloszenia;
     private static volatile int numer = 1;
 
 

@@ -1,9 +1,9 @@
 /**
  * @author Piotr Górak, Maciej Knichał dnia 2015-03-26.
  */
-public class Baza extends Budynek {
-    private int x;
-    private int y;
+class Baza extends Budynek {
+    private final int x;
+    private final int y;
 
     public Baza(String nazwa, Listy listy) {
         super(nazwa, listy);
