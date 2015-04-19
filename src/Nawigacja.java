@@ -93,7 +93,7 @@ class Nawigacja {
         }
     }
 
-    public List<Vertex> wyliczDroge(Vertex skad, Vertex dokad) {
+    public synchronized List<Vertex> wyliczDroge(Vertex skad, Vertex dokad) {
         computePaths(skad);
         minDystans(dokad);
         return getShortestPathTo(dokad);
@@ -104,7 +104,7 @@ class Nawigacja {
         return dokad.minDistance;
     }
 
-    private void computePaths(Vertex source) {
+    private static void computePaths(Vertex source) {
         source.minDistance = 0.;
         PriorityQueue<Vertex> vertexQueue = new PriorityQueue<>();
         vertexQueue.add(source);
@@ -113,6 +113,7 @@ class Nawigacja {
             Vertex u = vertexQueue.poll();
 
             // Visit each edge exiting u
+
             for (Edge e : u.adjacencies) {
                 Vertex v = e.target;
                 double weight = e.weight;
@@ -125,10 +126,11 @@ class Nawigacja {
                     vertexQueue.add(v);
                 }
             }
+
         }
     }
 
-    private List<Vertex> getShortestPathTo(Vertex target) {
+    private static List<Vertex> getShortestPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<Vertex>();
         for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
             path.add(vertex);

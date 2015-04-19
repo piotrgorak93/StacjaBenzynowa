@@ -19,14 +19,7 @@ public class Kontroler {
         listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(budynek.getNazwa(), budynek.getX(), budynek.getY()));
     }
 
-    public static void zerujVertexy(Listy listy) {
-        for (Vertex vertex : listy.getListaCustomVertex()) {
-            vertex.previous = null;
-            vertex.adjacencies = null;
-            vertex.minDistance = Double.POSITIVE_INFINITY;
-        }
 
-    }
 
     public static void main(String[] args) {
         Listy listy = new Listy();
@@ -41,17 +34,45 @@ public class Kontroler {
         listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(baza.getNazwa(), baza.getX(), baza.getY()));
 
 //        utworzPojazd(listy, "MAN", baza);
-        utworzBudynek(new Magazyn("ASD", listy), listy);
-        utworzBudynek(new Fabryka("Tesco", listy), listy);
+        utworzBudynek(new Magazyn("Tesco", listy), listy);
+        utworzBudynek(new Magazyn("Castorama", listy), listy);
+        utworzBudynek(new Magazyn("Auchan", listy), listy);
+        utworzBudynek(new Magazyn("Magazyn Części Samochodowych", listy), listy);
+        utworzBudynek(new Magazyn("Żabka", listy), listy);
+        utworzBudynek(new Magazyn("Leroy Merlin", listy), listy);
+
+
+
+
+        utworzBudynek(new Fabryka("Huta szkła", listy), listy);
+        utworzBudynek(new Fabryka("Tartak", listy), listy);
+        utworzBudynek(new Fabryka("Fabryka nici", listy), listy);
+
+        utworzBudynek(new Fabryka("Fabryka puszek", listy), listy);
+
+        utworzBudynek(new Fabryka("Browar Lech", listy), listy);
+        utworzBudynek(new Fabryka("Fabryka śrubek", listy), listy);
+        utworzBudynek(new Fabryka("Szkółka leśna", listy), listy);
+
+
+
+
         utworzBudynek(new Stacja("Orlen", listy), listy);
         utworzBudynek(new Stacja("Shell", listy), listy);
         utworzBudynek(new Stacja("Lotos", listy), listy);
        // listy.dodajDoHashmapy();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         utworzPojazd(listy, "Mercedes", baza);
-//        new Thread(new Fabryka(listy, "Tesco")).start();
-//        new Thread(new Fabryka(listy, "Castorama")).start();
-        //  new Thread(new Magazyn("Magazyn Andrzeja",listy)).start();
-//        new Thread(new Stacja(listy, "Orlen")).start();
+        utworzPojazd(listy, "MAN", baza);
+        utworzPojazd(listy, "DAF", baza);
+        utworzPojazd(listy, "Scania", baza);
+        utworzPojazd(listy, "Volvo", baza);
+        utworzPojazd(listy, "Iveco", baza);
+        utworzPojazd(listy, "Kamaz", baza);
 
     }
 }

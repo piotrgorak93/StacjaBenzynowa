@@ -21,8 +21,6 @@ class Pojazd extends Thread {
     private int pozycjaY;
     private final List<Vertex> backupListyVertex;
     private final boolean czyWziacZlecenie = true;
-    private boolean czyWyjsc = false;
-    private boolean czyBylemNaStacji = false;
     public boolean blokada = false;
     public boolean czyZatankowany = false;
 
@@ -83,7 +81,11 @@ class Pojazd extends Thread {
         while (czyJechacField) {
             while (czyWolny()) {
                 czekajCzasWMilisekundach(2000);
-                jestemZajety();
+                try {
+                    jestemZajety();
+                } catch (Exception e) {
+                    System.out.println(getTruckName() + " się zepsuł");
+                }
                 if (!czyJechacField)
                     break;
             }
@@ -229,9 +231,18 @@ class Pojazd extends Thread {
 
     }
 
+    public void zerujVertexy() {
+        for (Vertex vertex : this.listy.getListaCustomVertex()) {
+            vertex.previous = null;
+            vertex.adjacencies = null;
+            vertex.minDistance = Double.POSITIVE_INFINITY;
+        }
+
+    }
+
     private void jedzNaStacje(Pojazd pojazd, Vertex skad) {
         List<Vertex> localList = pojazd.backupListyVertex;
-        Kontroler.zerujVertexy(listy);
+        zerujVertexy();
         double dystans;
         jade = true;
         Nawigacja gps = new Nawigacja(pojazd.getMojaPozycja(), localList);
@@ -283,7 +294,7 @@ class Pojazd extends Thread {
 
 
     private void jedz(Pojazd pojazd, Vertex skad, Vertex dokad) {
-        Kontroler.zerujVertexy(listy);
+        zerujVertexy();
         List<Vertex> localList = pojazd.backupListyVertex;
         double dystans;
         pojazd.jade = true;
@@ -311,7 +322,7 @@ class Pojazd extends Thread {
     }
 
     private void kontynuujJazde(Pojazd pojazd, Vertex skad, Vertex dokad) {
-        Kontroler.zerujVertexy(listy);
+        zerujVertexy();
         List<Vertex> localList = pojazd.backupListyVertex;
         double dystans;
         pojazd.jade = true;
@@ -334,7 +345,7 @@ class Pojazd extends Thread {
         int procent = 20;
         double localPojemnosc = getPojemnoscBaku();
         localPojemnosc = localPojemnosc * procent / 100;
-        System.out.println("Wskaźnik rezerwy ustawiony na: " + procent + "%: " + localPojemnosc);
+        System.out.println(getTruckName() + ": wskaźnik rezerwy ustawiony na: " + procent + "%: " + localPojemnosc);
         if (getIloscPaliwa() < localPojemnosc) {
             System.out.println("Rezerwa się świeci, jade na stacje");
             return true;
