@@ -1,6 +1,5 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,12 +23,14 @@ public class Pojazd extends Thread {
     private boolean czyWziacZlecenie = true;
     private boolean czyWyjsc = false;
     private boolean czyBylemNaStacji = false;
+    public boolean blokada = false;
+    public boolean czyZatankowany = false;
 
     public Pojazd(Listy listy, String truckName, Baza baza) {
         this.baza = baza;
         this.listy = listy;
         setTruckName(truckName);
-        setPojemnoscBaku(new Randomizer().losujZZakresu(50, 30));
+        setPojemnoscBaku(new Randomizer().losujZZakresu(150, 100));
         setSpalanie(new Randomizer().losujZZakresu(50, 25));
         setIloscPaliwa(getPojemnoscBaku());
         this.pozycjaX = this.baza.pozycjaX();
@@ -87,12 +88,8 @@ public class Pojazd extends Thread {
                     break;
             }
         }
-        System.out.println("Zabijam watek" + currentThread().getName());
+        System.out.println("Zabijam watek samochodu " + getTruckName() + " " + currentThread().getName());
         Thread.currentThread().interrupt();
-    }
-
-    private boolean czyDzialac() {
-        return czyDzialac;
     }
 
     public boolean czyWolny() {
@@ -118,10 +115,10 @@ public class Pojazd extends Thread {
                 return;
             }
             jedz(this, getMojaPozycja(), cel);
-            jestemWolny();
             if (!czyJechacField) {
                 return;
             }
+            jestemWolny();
         }
     }
 
@@ -210,7 +207,7 @@ public class Pojazd extends Thread {
         } while (!czySkonczyc);
         System.out.println(getTruckName() + ": jestem w punkcie " + vertex.name);
         if (getIloscPaliwa() >= 0)
-            System.out.println("Mam w baku " + Math.round(getIloscPaliwa() * 100) / 100 + " l paliwa");
+            System.out.println("Mam w baku " + round(getIloscPaliwa(), 2) + " l paliwa");
     }
 
     public double ileSpale(double dystans) {
@@ -232,7 +229,7 @@ public class Pojazd extends Thread {
 
     }
 
-    private void jedzNaStacje(Pojazd pojazd, Vertex skad, Vertex celZlecenia) {
+    private void jedzNaStacje(Pojazd pojazd, Vertex skad) {
         List<Vertex> localList = pojazd.backupListyVertex;
         Kontroler.zerujVertexy(listy);
         double dystans;
@@ -242,27 +239,46 @@ public class Pojazd extends Thread {
         Vertex dokad = gps.znajdzStacje(listy);
         mojaTrasa = gps.wyliczDroge(skad, dokad);
         dystans = gps.minDystans(dokad);
-        System.out.println("Dystans do " + dokad + " to " + dystans);
+        System.out.println("Dystans z " + getMojaPozycja() + " do " + dokad + " to " + dystans);
         System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
-        if (pojazd.ileSpale(dystans) > getIloscPaliwa()) {
-            System.out.println("Nie dojade do stacji, wychodze!");
-            this.czyJechacField = false;
+        if (pojazd.ileSpale(dystans) <= getIloscPaliwa()) {
+            pojazd.czekajCzasWMilisekundach(100);
+            System.out.println("Ruszam, jestem w punkcie " + skad);
+            dystans = gps.minDystans(dokad);
+            System.out.println("Dystans do " + dokad + " to " + dystans);
+            System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
+            pojazd.funkcjaJazdy(mojaTrasa);
+            pojazd.setMojaPozycja(dokad);
+
+            Stacja mojaStacja = null;
+
+            for (Stacja stacja : listy.getListaStacji()) {
+                if (dokad.name.equals(stacja.getNazwa()))
+                    mojaStacja = stacja;
+            }
+
+            while (!mojaStacja.dodajPojazdDoStacji(this)) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            mojaStacja.tankujPaliwo(this);
+            this.czyZatankowany = false;
+            //localList2.add(localList2.size(), this);
+            this.czyJechacField = true;
+            //for (Stacja stacja : localList2) {
+
+            //}
+
+
         } else {
-            ArrayList<Pojazd> localList2 = listy.pobierzZHashmapy(dokad);
-            localList2.add(localList2.size(), this);
-            this.czyBylemNaStacji = true;
+            System.out.println("Nie dojade do stacji, znikam!");
+            czyJechacField = false;
+
         }
-        Kontroler.zerujVertexy(listy);
-        pojazd.czekajCzasWMilisekundach(100);
-        gps = new Nawigacja(pojazd.getMojaPozycja(), localList);
-        System.out.println("Ruszam, jestem w punkcie " + skad);
-        skad = getMojaPozycja();
-        mojaTrasa = gps.wyliczDroge(skad, celZlecenia);
-        dystans = gps.minDystans(celZlecenia);
-        System.out.println("Dystans do " + celZlecenia + " to " + dystans);
-        System.out.println("W trasie do " + celZlecenia + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
-        pojazd.funkcjaJazdy(mojaTrasa);
-        pojazd.setMojaPozycja(celZlecenia);
+
     }
 
 
@@ -273,50 +289,56 @@ public class Pojazd extends Thread {
         pojazd.jade = true;
         Nawigacja gps = new Nawigacja(pojazd.getMojaPozycja(), localList);
         List<Vertex> mojaTrasa;
-
         System.out.println(pojazd.getTruckName() + " wykonuje zlecenie " + pojazd.getMojeZlecenie());
-        System.out.println("Jade z " + skad + " do " + dokad);
         mojaTrasa = gps.wyliczDroge(skad, dokad);
         dystans = gps.minDystans(dokad);
-        System.out.println("Dystans do " + dokad + " to " + dystans);
+        System.out.println("Dystans z " + skad + " do " + dokad + " to " + dystans);
         System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
         if (czyJechacNaStacje()) {
-            jedzNaStacje(this, getMojaPozycja(), dokad);
-        }
-        if (!czyBylemNaStacji) {
-            if (!czyJechacField) return;
-            if (!czyDojade(dystans, dokad)) return;
+            System.out.println("Przeliczam trasę");
+            jedzNaStacje(this, getMojaPozycja());
+        } else {
             pojazd.czekajCzasWMilisekundach(100);
             System.out.println("Ruszam, jestem w punkcie " + skad);
-            skad = getMojaPozycja();
-            mojaTrasa = gps.wyliczDroge(skad, dokad);
-            dystans = gps.minDystans(dokad);
-            System.out.println("Dystans do " + dokad + " to " + dystans);
-            System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
+            System.out.println("Jade z " + skad + " do " + dokad);
             pojazd.funkcjaJazdy(mojaTrasa);
             pojazd.setMojaPozycja(dokad);
+            return;
         }
+        if (czyJechacField)
+            kontynuujJazde(this, getMojaPozycja(), dokad);
+
+    }
+
+    private void kontynuujJazde(Pojazd pojazd, Vertex skad, Vertex dokad) {
+        Kontroler.zerujVertexy(listy);
+        List<Vertex> localList = pojazd.backupListyVertex;
+        double dystans;
+        pojazd.jade = true;
+        Nawigacja gps = new Nawigacja(pojazd.getMojaPozycja(), localList);
+        List<Vertex> mojaTrasa;
+        System.out.println(pojazd.getTruckName() + " wykonuje zlecenie " + pojazd.getMojeZlecenie());
+        mojaTrasa = gps.wyliczDroge(skad, dokad);
+        dystans = gps.minDystans(dokad);
+        System.out.println("Dystans " + skad + " do " + dokad + " to " + dystans);
+        System.out.println("W trasie do " + dokad + " spale " + pojazd.ileSpale(dystans) + " l paliwa");
+        pojazd.czekajCzasWMilisekundach(100);
+        System.out.println("Ruszam, jestem w punkcie " + skad);
+        System.out.println("Jade z " + skad + " do " + dokad);
+        pojazd.funkcjaJazdy(mojaTrasa);
+        pojazd.setMojaPozycja(dokad);
+
     }
 
     private boolean czyJechacNaStacje() {
+        int procent = 20;
         double localPojemnosc = getPojemnoscBaku();
-        localPojemnosc = localPojemnosc * 50 / 100;
-        System.out.println("LOKAL " + localPojemnosc);
+        localPojemnosc = localPojemnosc * procent / 100;
+        System.out.println("Wskaźnik rezerwy ustawiony na: " + procent + "%: " + localPojemnosc);
         if (getIloscPaliwa() < localPojemnosc) {
             System.out.println("Rezerwa się świeci, jade na stacje");
             return true;
         } else return false;
-    }
-
-    private boolean czyDojade(Double dystans, Vertex dokad) {
-        double iloscPotrzebnegoPaliwa = ileSpale(dystans);
-        if (iloscPotrzebnegoPaliwa > getIloscPaliwa()) {
-            czyJechacField = false;
-            System.out.println("Za mało paliwa w baku, mam " + round(getIloscPaliwa(), 2) + " l, a potrzebuje " + iloscPotrzebnegoPaliwa);
-            jedzNaStacje(this, getMojaPozycja(), dokad);
-            return false;
-        } else return true;
-
     }
 
     public boolean isCzyWziacZlecenie() {
@@ -324,7 +346,7 @@ public class Pojazd extends Thread {
     }
 
     public void tankuj() {
-        setIloscPaliwa(pojemnoscBaku);
+        setIloscPaliwa(getPojemnoscBaku());
         System.out.println(getTruckName() + " bak napełniony: " + getIloscPaliwa() + " l");
     }
 }

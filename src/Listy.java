@@ -22,9 +22,8 @@ public class Listy {
         }
     }
 
-    public ArrayList<Pojazd> pobierzZHashmapy(Vertex dokad) {
-        Stacja szukana = znajdzStacjePoVertexie(dokad);
-        return hashMap.get(szukana);
+    public HashMap<Stacja, ArrayList<Pojazd>> pobierzHashmape() {
+        return hashMap;
     }
 
     public ArrayList<Magazyn> getListaMagazynow() {

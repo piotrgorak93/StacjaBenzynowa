@@ -13,7 +13,8 @@ public class Kontroler {
 
     private static void utworzBudynek(Budynek budynek, Listy listy) {
         if (!budynek.getClass().getCanonicalName().equalsIgnoreCase("Magazyn"))
-            new Thread((Runnable) budynek).start();
+            if (!budynek.getClass().getCanonicalName().equalsIgnoreCase("Stacja"))
+                new Thread((Runnable) budynek).start();
 
         listy.getListaCustomVertex().add(listy.getListaCustomVertex().size(), new Vertex(budynek.getNazwa(), budynek.getX(), budynek.getY()));
     }

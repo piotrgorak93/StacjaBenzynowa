@@ -202,8 +202,6 @@ public class Nawigacja {
 
 
 class VertexFinder {
-
-
     public Vertex znajdzVertexPoNazwie(String nazwa, List<Vertex> listaVertex) {
         for (Vertex vertex : listaVertex) {
             if (vertex.name.equals(nazwa))
